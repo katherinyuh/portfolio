@@ -1,0 +1,65 @@
+# Katherine's Portfolio — Cursor Rules
+
+## Stack
+- Next.js 14 App Router + TypeScript
+- Tailwind CSS (dark mode via `class` strategy)
+- Framer Motion for all animations
+- Lenis for smooth scroll
+
+## Design Tokens — always use these, never hardcode hex values
+
+### Surfaces (dark mode first, always)
+- Page bg: `bg-surface-950` (#09090b)
+- Sidebar: `bg-surface-900` (#18181b)
+- Cards: `bg-surface-800` (#27272a)
+- Borders: `border-surface-700` (#3f3f46)
+
+### Text
+- Primary: `text-zinc-100`
+- Secondary: `text-zinc-400`
+- Muted: `text-zinc-500`
+- Dimmer: `text-zinc-600`
+
+### Accent
+- Main: `text-accent` / `bg-accent` (violet-400, #a78bfa)
+- Dim: `bg-accent-dim` (violet-600)
+- Muted bg: `bg-accent-muted` (violet-950)
+
+## Component conventions
+- All components are in `src/components/`
+- Layout components: `src/components/layout/`
+- UI atoms: `src/components/ui/`
+- All data lives in `src/lib/data.ts` — never hardcode content in components
+- Use `cn()` from `src/lib/utils.ts` for conditional class merging
+
+## Animation principles
+- Entry animations: fade + translateY(12–20px), duration 0.4–0.5s, ease [0.16, 1, 0.3, 1]
+- Stagger siblings: 0.06–0.08s delay increments
+- Hover: subtle y: -4, duration 0.2s ease-out
+- Never use CSS transitions for complex animations — always Framer Motion
+- Respect `prefers-reduced-motion` via Framer Motion's `useReducedMotion()`
+
+## File structure
+src/
+  app/
+    layout.tsx          ← root layout with Sidebar + SmoothScroll
+    page.tsx            ← home / work index
+    about/page.tsx      ← about page
+    work/[slug]/page.tsx ← case study template
+  components/
+    layout/
+      Sidebar.tsx
+      SmoothScroll.tsx
+    ui/
+      ProjectCard.tsx
+  lib/
+    data.ts             ← ALL content lives here
+    utils.ts            ← cn() helper
+  styles/
+    globals.css
+
+## Cursor prompting tips
+- "Add a [component] using existing tokens from tailwind.config.ts"
+- "Animate this with Framer Motion, stagger children by 0.07s"
+- "Keep it dark mode — no hardcoded colors"
+- "Add micro-interaction: [describe what should happen on hover/click]"

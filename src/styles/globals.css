@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --sidebar-width: 240px;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    @apply bg-surface-50 text-text-secondary antialiased;
+  }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { @apply bg-transparent; }
+  ::-webkit-scrollbar-thumb { @apply bg-surface-300 rounded-full; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-surface-400; }
+
+  ::selection { @apply bg-accent-muted text-accent; }
+}
+
+@layer components {
+  .nav-link {
+    @apply flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-text-secondary
+           transition-all duration-200 relative overflow-hidden
+           hover:text-text-primary hover:bg-surface-200;
+  }
+
+  .nav-link.active {
+    @apply text-text-primary bg-surface-200;
+  }
+
+  .nav-link.active::before {
+    content: '';
+    @apply absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 bg-accent rounded-full;
+  }
+
+  .case-card {
+    @apply relative rounded-xl overflow-hidden bg-surface-200 border border-surface-300
+           transition-all duration-300 cursor-pointer
+           hover:border-surface-400 hover:-translate-y-0.5;
+  }
+
+  .tag {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs
+           bg-surface-300 text-text-secondary;
+  }
+}
