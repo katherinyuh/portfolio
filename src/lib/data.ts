@@ -1,3 +1,7 @@
+export type CaseStudyBlock =
+  | { type: "text"; label?: string; content: string | string[] }
+  | { type: "image"; caption: string };
+
 export type Project = {
   id: string;
   title: string;
@@ -8,13 +12,15 @@ export type Project = {
   thumbnail: string;
   featured?: boolean;
   slug: string;
+  caseStudy?: CaseStudyBlock[];
+  liveUrl?: string;
 };
 
 export const siteConfig = {
   name: "Katherine Liu",
   role: "Product Designer",
   location: "San Francisco Bay Area",
-  bio: "Product designer with B2B experience, coding knowledge, and an endless love for 🍚.",
+  bio: "Product designer passionate about creating interfaces that stay clear even when the problem underneath is complicated.",
   email: "katherinyuh@ucdavis.edu",
 };
 
@@ -32,27 +38,120 @@ export const socials = [
 
 export const projects: Project[] = [
   {
+    id: "2",
+    title: "University event discovery and management platform",
+    company: "Clubly",
+    year: "2025 – Present",
+    tags: ["Mobile", "Design Systems", "Prototyping"],
+    description:
+      "Launching Clubly's events feature to help 35,000+ UC Davis students find events that fit their interests while enabling clubs to grow attendance.",
+    thumbnail: "/images/project-2.jpg",
+    slug: "clubly",
+    liveUrl: "https://clubly.org/events",
+    caseStudy: [
+      {
+        type: "text",
+        label: "What's Clubly?",
+        content: [
+          "Clubly, released by Aggieworks in February 2024, is a platform that connects 35,000+ UC Davis students with 209 clubs while giving admins tools to manage profiles and cultivate year-round engagement.",
+          "As the sole product designer, I designed the events page on Clubly to let students find events that match their interests and schedules, and to help clubs grow attendance and build stronger communities.",
+          "I led user interviews, prototyped in Figma, and ran usability tests to refine the design. Since January 2025, I've been working with 5 engineers, 2 product managers, and 1 product marketer on this project.",
+        ],
+      },
+      {
+        type: "text",
+        label: "Problem",
+        content:
+          "Existing ways to find and promote club events aren't effective. Despite UC Davis' abundance of clubs, students still struggle to find events, relying on word of mouth, flyers, or Instagram. This fragmented process wastes time, causes missed opportunities, and leaves many overwhelmed or missing out. Events can also feel less compelling when students don't have friends to attend with. Meanwhile, club admins invest significant effort and resources, but low turnout limits impact and motivation.",
+      },
+      {
+        type: "text",
+        label: "Solution & Outcomes",
+        content:
+          "Clubly consolidates event creation and discovery into a single platform, personalizing what students see based on their interests, schedule, and social circle. Within the first week of launch, 20+ events were posted, and the platform acquired 600+ users following a marketing push.",
+      },
+      {
+        type: "text",
+        label: "Decisions",
+        content: "Design choices were grounded in research and iterated closely with engineering throughout the build.",
+      },
+      {
+        type: "text",
+        label: "Research insights",
+        content:
+          "Interviewed 8 students and 12 club admins to ground the design in how event discovery and promotion actually happened day to day.",
+      },
+      {
+        type: "text",
+        label: "Familiar mental models",
+        content:
+          "Aligned new flows with tools admins already trusted — social platforms, Canva, Google Workspace — so the learning curve stayed low.",
+      },
+      {
+        type: "text",
+        label: "Multi-day events",
+        content:
+          "Reworked the event creation form to support multi-day events with customizable time slots per day, iterating from an early version into a clearer final layout.",
+      },
+      {
+        type: "image",
+        caption: "Event creation form — initial vs. final, supporting multi-day events",
+      },
+      {
+        type: "text",
+        label: "Filters",
+        content:
+          "Added category, date, and \"extras\" filters (free food, merch, rides, raffles) so students could narrow events down to what actually mattered to them.",
+      },
+      {
+        type: "image",
+        caption: "Filtered events view",
+      },
+      {
+        type: "text",
+        label: "Admin card layout",
+        content:
+          "The first version of the admin event card grouped information in a way that broke the law of proximity; the final layout regrouped related fields so admins could scan cards faster.",
+      },
+      {
+        type: "image",
+        caption: "Admin event card — initial vs. final layout",
+      },
+      {
+        type: "text",
+        label: "Student card layout",
+        content:
+          "Iterated on the student-facing card after the first version let graphics get cut off — the final version fixed cropping and tightened the visual hierarchy.",
+      },
+      {
+        type: "image",
+        caption: "Student event card — layout iterations",
+      },
+      {
+        type: "text",
+        label: "Next steps",
+        content:
+          "Immediate: run usability testing on the current release. Short-term: ship RSVP functionality. Long-term: research a dedicated student dashboard.",
+      },
+      {
+        type: "text",
+        label: "Takeaways",
+        content:
+          "Pulling engineers into design decisions earlier — not just at handoff — would have caught feasibility issues sooner, like the gradient border implementation that turned out harder to build than scoped. More broadly, this project reinforced how much good cross-functional collaboration shapes the final product.",
+      },
+    ],
+  },
+  {
     id: "1",
-    title: "Route Optimization Platform",
+    title: "Industrial analytics dashboard redesign",
     company: "Laminar Systems",
-    year: "2024",
+    year: "2025",
     tags: ["User Research", "Product Design", "Figma"],
     description:
-      "End-to-end UX for a route-planning tool for small business owners — from driver logistics to delivery confirmation.",
+      "Streamlining industrial analytics for Laminar Systems' Insights platform to boost adoption and align with facility managers' workflows.",
     thumbnail: "/images/project-1.jpg",
     featured: true,
     slug: "route-optimization",
-  },
-  {
-    id: "2",
-    title: "Clubly",
-    company: "AggieWorks",
-    year: "2024",
-    tags: ["Mobile", "Design Systems", "Prototyping"],
-    description:
-      "Redesigning club discovery and event management for 30,000+ UC Davis students — filterable search, shareable results, and a new design system.",
-    thumbnail: "/images/project-2.jpg",
-    slug: "clubly",
   },
   {
     id: "3",

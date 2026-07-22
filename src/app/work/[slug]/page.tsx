@@ -3,7 +3,15 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { projects } from "@/lib/data";
+import { projects, siteConfig, type CaseStudyBlock } from "@/lib/data";
+
+const fallbackCaseStudy: CaseStudyBlock[] = [
+  { type: "text", label: "Overview", content: "What was the problem? Who were you designing for?" },
+  { type: "text", label: "Research", content: "What did you learn? Interview insights, survey data, heuristic findings…" },
+  { type: "text", label: "Process", content: "How did you explore the problem space? Wireframes, flows, iterations…" },
+  { type: "text", label: "Solution", content: "What did you ship? Key design decisions and rationale…" },
+  { type: "text", label: "Outcomes", content: "What changed? Metrics, feedback, learnings…" },
+];
 
 // This would normally fetch from a CMS or MDX files
 // For now it shows a structured template per project
@@ -17,7 +25,7 @@ export default function CaseStudyPage({
   if (!project) notFound();
 
   return (
-    <div className="px-8 py-10 max-w-[720px]">
+    <div className="px-16 py-10 w-full">
       {/* Back */}
       <motion.div
         initial={{ opacity: 0, x: -8 }}
@@ -40,21 +48,38 @@ export default function CaseStudyPage({
         transition={{ duration: 0.45 }}
         className="mb-10"
       >
-        <div className="flex items-center gap-2 mb-3">
-          <span className="text-xs text-text-muted">{project.company}</span>
-          <span className="text-surface-400">·</span>
-          <span className="text-xs text-text-muted">{project.year}</span>
-        </div>
-        <h1 className="text-3xl font-medium text-text-primary mb-4 leading-tight">
-          {project.title}
-        </h1>
-        <p className="text-text-secondary leading-relaxed">{project.description}</p>
-        <div className="flex flex-wrap gap-2 mt-4">
-          {project.tags.map((tag) => (
-            <span key={tag} className="tag">{tag}</span>
-          ))}
+        <p className="text-base text-text-muted mb-3">{project.company}</p>
+        <div className="grid grid-cols-2 gap-8 items-center">
+          <div>
+            <h1 className="text-2xl font-serif font-medium text-text-primary leading-snug mb-1">
+              {project.title}
+            </h1>
+            <p className="text-base text-text-muted">{siteConfig.role}, {project.year}</p>
+          </div>
+          <p className="text-base text-text-muted leading-relaxed">
+            {project.description}
+          </p>
         </div>
       </motion.div>
+
+      {/* Live site link */}
+      {project.liveUrl && (
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.05 }}
+          className="mb-6"
+        >
+          <a
+            href={project.liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center rounded-none bg-slate-950 px-2 py-1 text-base text-slate-50 transition-colors hover:bg-slate-800"
+          >
+            View our live website
+          </a>
+        </motion.div>
+      )}
 
       {/* Hero image placeholder */}
       <motion.div
@@ -66,27 +91,42 @@ export default function CaseStudyPage({
         <p className="text-xs text-text-muted">Add your hero image here</p>
       </motion.div>
 
-      {/* Case study sections — fill these in */}
-      {[
-        { label: "Overview", placeholder: "What was the problem? Who were you designing for?" },
-        { label: "Research", placeholder: "What did you learn? Interview insights, survey data, heuristic findings…" },
-        { label: "Process", placeholder: "How did you explore the problem space? Wireframes, flows, iterations…" },
-        { label: "Solution", placeholder: "What did you ship? Key design decisions and rationale…" },
-        { label: "Outcomes", placeholder: "What changed? Metrics, feedback, learnings…" },
-      ].map((section, i) => (
-        <motion.section
-          key={section.label}
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.15 + i * 0.06 }}
-          className="mb-12"
-        >
-          <h2 className="text-xs text-text-muted uppercase tracking-widest mb-4">
-            {section.label}
-          </h2>
-          <p className="text-sm text-text-muted italic">{section.placeholder}</p>
-        </motion.section>
-      ))}
+      {/* Case study sections */}
+      {(project.caseStudy ?? fallbackCaseStudy).map((block, i) =>
+        block.type === "image" ? (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.15 + i * 0.06 }}
+            className="w-full aspect-video bg-surface-200 rounded-xl border border-surface-300 mb-12 flex items-center justify-center"
+          >
+            <p className="text-xs text-text-muted">{block.caption}</p>
+          </motion.div>
+        ) : (
+          <motion.section
+            key={i}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.15 + i * 0.06 }}
+            className="mb-12"
+          >
+            {block.label && (
+              <p className="text-xs font-sans text-text-muted uppercase tracking-wider mb-4">
+                {block.label}
+              </p>
+            )}
+            {(Array.isArray(block.content) ? block.content : [block.content]).map((paragraph, j) => (
+              <p
+                key={j}
+                className={`text-base text-text-muted max-w-prose ${project.caseStudy ? "" : "italic"} ${j > 0 ? "mt-3" : ""}`}
+              >
+                {paragraph}
+              </p>
+            ))}
+          </motion.section>
+        )
+      )}
     </div>
   );
 }

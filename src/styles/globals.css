@@ -5,6 +5,24 @@
 @layer base {
   :root {
     --sidebar-width: 240px;
+
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+
+    /* H3 — fluid: 24px → 30px */
+    --font-size-2xl: clamp(1.5rem, 1.35rem + 0.75vw, 1.875rem);
+
+    /* H2 — fluid: 30px → 40px */
+    --font-size-3xl: clamp(1.875rem, 1.5rem + 1.875vw, 2.5rem);
+
+    /* H1 — fluid: 36px → 52px */
+    --font-size-4xl: clamp(2.25rem, 1.75rem + 2.5vw, 3.25rem);
+
+    /* Display — fluid: 48px → 72px */
+    --font-size-5xl: clamp(3rem, 2rem + 5vw, 4.5rem);
   }
 
   * {
@@ -12,7 +30,7 @@
   }
 
   body {
-    @apply bg-surface-50 text-text-secondary antialiased;
+    @apply bg-slate-50 text-text-secondary antialiased;
   }
 
   ::-webkit-scrollbar { width: 4px; }
@@ -20,29 +38,23 @@
   ::-webkit-scrollbar-thumb { @apply bg-surface-300 rounded-full; }
   ::-webkit-scrollbar-thumb:hover { @apply bg-surface-400; }
 
-  ::selection { @apply bg-accent-muted text-accent; }
+  ::selection { @apply bg-red-muted text-red; }
 }
 
 @layer components {
   .nav-link {
-    @apply flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-text-secondary
-           transition-all duration-200 relative overflow-hidden
-           hover:text-text-primary hover:bg-surface-200;
+    @apply flex items-center gap-3 h-[21px] rounded-none text-sm text-text-secondary
+           transition-all duration-200 relative
+           hover:text-red-700;
   }
 
   .nav-link.active {
-    @apply text-text-primary bg-surface-200;
+    @apply text-red-700;
   }
 
   .nav-link.active::before {
     content: '';
-    @apply absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 bg-accent rounded-full;
-  }
-
-  .case-card {
-    @apply relative rounded-xl overflow-hidden bg-surface-200 border border-surface-300
-           transition-all duration-300 cursor-pointer
-           hover:border-surface-400 hover:-translate-y-0.5;
+    @apply absolute -left-3 top-1/2 -translate-y-1/2 w-0.5 h-4 bg-red rounded-none;
   }
 
   .tag {

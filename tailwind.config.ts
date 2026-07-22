@@ -23,13 +23,50 @@ const config: Config = {
           secondary: "#4a4540", // body text
           muted:     "#8c8680", // labels, placeholders
         },
-        accent: {
-          DEFAULT: "#8b6f47", // warm brown
-          muted:   "#f0e8dc", // accent bg tint
+        red: {
+          50:  "#FEF2F2",
+          100: "#FDE3E3",
+          200: "#FCCCCC",
+          300: "#F9A8A8",
+          400: "#F37676",
+          500: "#E84B4B",
+          600: "#D52D2D",
+          700: "#B22222",
+          800: "#942020",
+          900: "#7B2121",
+          950: "#430C0C",
+          DEFAULT: "#B22222", // firebrick red
+          muted:   "#FDE3E3", // red bg tint
         },
+        slate: {
+          50:  "#F4F4F5",
+          100: "#EEEEF0",
+          200: "#DADADD",
+          300: "#B9BAC0",
+          400: "#93949D",
+          500: "#767681",
+          600: "#606169",
+          700: "#4E4E56",
+          800: "#434349",
+          900: "#3B3C3F",
+          950: "#27272A",
+          DEFAULT: "#F4F4F5",
+        },
+      },
+      fontSize: {
+        xs:   ['var(--font-size-xs)',   { lineHeight: '1.5',   letterSpacing: '0em' }],
+        sm:   ['var(--font-size-sm)',   { lineHeight: '1.5',   letterSpacing: '0em' }],
+        base: ['var(--font-size-base)', { lineHeight: '1.5',   letterSpacing: '0em' }],
+        lg:   ['var(--font-size-lg)',   { lineHeight: '1.625', letterSpacing: '0em' }],
+        xl:   ['var(--font-size-xl)',   { lineHeight: '1.333', letterSpacing: '-0.02em' }],
+        '2xl': ['var(--font-size-2xl)', { lineHeight: '1.333', letterSpacing: '-0.02em' }],
+        '3xl': ['var(--font-size-3xl)', { lineHeight: '1.2',   letterSpacing: '-0.02em' }],
+        '4xl': ['var(--font-size-4xl)', { lineHeight: '1.2',   letterSpacing: '-0.03em' }],
+        '5xl': ['var(--font-size-5xl)', { lineHeight: '1',     letterSpacing: '-0.03em' }],
       },
       fontFamily: {
         sans: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
+        serif: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
         mono: ["var(--font-geist-mono)", "monospace"],
       },
       animation: {

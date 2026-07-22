@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
 import "@/styles/globals.css";
 import { Sidebar } from "@/components/layout/Sidebar";
+import { IntroScreen } from "@/components/ui/IntroScreen";
 import { siteConfig } from "@/lib/data";
 
 export const metadata: Metadata = {
@@ -20,10 +20,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${GeistSans.variable} ${GeistMono.variable} font-sans`}>
+      <body className={`${GeistSans.variable} font-sans`}>
+        <IntroScreen />
         <div className="flex min-h-screen">
           <Sidebar />
-          <main className="ml-[240px] flex-1 min-h-screen">
+          <main className="ml-[250px] flex-1 min-h-screen">
             {children}
           </main>
         </div>
