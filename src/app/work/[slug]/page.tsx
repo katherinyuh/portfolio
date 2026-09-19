@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { projects, siteConfig, type CaseStudyBlock } from "@/lib/data";
 
-const STROKE = "#DADADD";
+const STROKE = "rgb(var(--slate-200))"; // light hairline; follows the light / dark theme
 const IMAGE_STROKE = [`1px 0`, `-1px 0`, `0 1px`, `0 -1px`]
   .map((offset) => `drop-shadow(${offset} 0 ${STROKE})`)
   .join(" ");

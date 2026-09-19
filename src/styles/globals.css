@@ -6,6 +6,35 @@
   :root {
     --sidebar-width: 240px;
 
+    /* ---- Theme colours (RGB channels). Light is the default; dark follows the system setting. ---- */
+    color-scheme: light dark;
+
+    --card: 255 255 255;
+    --surface-50: 251 252 253;
+    --surface-100: 242 237 230;
+    --surface-200: 232 225 216;
+    --surface-300: 212 203 191;
+    --surface-400: 184 173 160;
+
+    --text-primary: 26 24 20;
+    --text-secondary: 74 69 64;
+    --text-muted: 140 134 128;
+
+    --red: 178 34 34;
+    --red-muted: 253 227 227;
+
+    --slate-50: 244 244 245;
+    --slate-100: 238 238 240;
+    --slate-200: 218 218 221;
+    --slate-300: 185 186 192;
+    --slate-400: 147 148 157;
+    --slate-500: 118 118 129;
+    --slate-600: 96 97 105;
+    --slate-700: 78 78 86;
+    --slate-800: 67 67 73;
+    --slate-900: 59 60 63;
+    --slate-950: 39 39 42;
+
     --font-size-xs: 0.75rem;
     --font-size-sm: 0.875rem;
     --font-size-base: 1rem;
@@ -23,6 +52,39 @@
 
     /* Display — fluid: 48px → 72px */
     --font-size-5xl: clamp(3rem, 2rem + 5vw, 4.5rem);
+  }
+
+  /* Dark theme, taken from hellokatliu.com: near-black page (#08090A), raised surface (#1F1F21),
+     near-white text (#F7F8F8), 64%-white body text, cool grey muted text (#8A8F98), and a
+     12%-white hairline (#272829 on the page background). */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --card: 31 31 33;
+      --surface-50: 8 9 10;
+      --surface-100: 31 31 33;
+      --surface-200: 39 40 41;
+      --surface-300: 58 59 61;
+      --surface-400: 92 95 100;
+
+      --text-primary: 247 248 248;
+      --text-secondary: 166 167 167;
+      --text-muted: 138 143 152;
+
+      --red: 243 118 118;
+      --red-muted: 59 29 29;
+
+      --slate-50: 8 9 10;
+      --slate-100: 16 17 18;
+      --slate-200: 39 40 41;
+      --slate-300: 58 59 61;
+      --slate-400: 92 95 100;
+      --slate-500: 138 143 152;
+      --slate-600: 166 168 173;
+      --slate-700: 192 195 199;
+      --slate-800: 218 220 222;
+      --slate-900: 236 237 238;
+      --slate-950: 247 248 248;
+    }
   }
 
   * {

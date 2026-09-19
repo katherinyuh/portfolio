@@ -1,20 +1,34 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Project } from "@/lib/data";
 import { CardVideo } from "@/components/ui/CardVideo";
+import { CompanyName } from "@/components/ui/CompanyName";
 
-// Scattered starting spots (% of the canvas) and tilt, keyed by project order.
+// "Scroll to explore" is switched off for now. Set this to true to bring it back: the board becomes
+// BOARD_SCALE× the visible area in each direction, you start in its middle, and scrolling (wheel,
+// trackpad, touch or arrow keys) moves around it. It has edges, so it isn't infinite.
+const SCROLL_TO_EXPLORE = false;
+const BOARD_SCALE = SCROLL_TO_EXPLORE ? 2 : 1;
+
+// Where each card starts, as a fraction (0–1) of the first visible view, measured from its top-left
+// corner, plus its tilt. Keyed by project order. The board is bigger than the view, so these are
+// converted to board percentages below; the default view therefore looks the same at any board size.
 const layout = [
-  { left: 4, top: 6, rotate: -5 },
-  { left: 34, top: 38, rotate: 3 },
-  { left: 56, top: 4, rotate: -2 },
-  { left: 12, top: 46, rotate: 4 },
+  { x: 0.139, y: 0.045, rotate: -5 }, // Clubly: top left
+  { x: 0.024, y: 0.538, rotate: 3 }, // Laminar: bottom left
+  { x: 0.612, y: 0.049, rotate: 3 }, // IBM: top right
+  { x: 0.510, y: 0.518, rotate: -2 }, // Delivery Optimizer: bottom right
 ];
+
+// The first view is the middle of the board: it spans this fraction of it, starting here.
+const VIEW_SIZE = 1 / BOARD_SCALE;
+const VIEW_START = (BOARD_SCALE - 1) / (2 * BOARD_SCALE);
+const boardPercent = (fractionOfView: number) => (VIEW_START + VIEW_SIZE * fractionOfView) * 100;
 
 const DEFAULT_RATIO = 4 / 3;
 
@@ -32,10 +46,19 @@ const cardWidth = (ratio: number) => {
 
 export function ProjectCanvas({ projects }: { projects: Project[] }) {
   const router = useRouter();
-  const canvasRef = useRef<HTMLDivElement>(null);
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const boardRef = useRef<HTMLDivElement>(null);
   const dragged = useRef(false);
   const topZ = useRef(1);
   const [zIndex, setZIndex] = useState<Record<string, number>>({});
+
+  // Start in the middle of the board.
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    el.scrollLeft = (el.scrollWidth - el.clientWidth) / 2;
+    el.scrollTop = (el.scrollHeight - el.clientHeight) / 2;
+  }, []);
 
   const bringToFront = (id: string) => {
     topZ.current += 1;
@@ -43,97 +66,112 @@ export function ProjectCanvas({ projects }: { projects: Project[] }) {
   };
 
   return (
-    <div
-      ref={canvasRef}
-      className="relative h-[70vh] min-h-[520px] touch-none overflow-hidden lg:h-[calc(100vh-3rem)]"
-    >
-      <AnimatePresence>
-        {projects.map((project, index) => {
-          const slot = layout[index % layout.length];
-          const ratio = project.thumbnailRatio ?? DEFAULT_RATIO;
-          const width = cardWidth(ratio);
-          return (
-            <motion.div
-              key={project.id}
-              drag
-              dragConstraints={canvasRef}
-              dragElastic={0.12}
-              dragMomentum={false}
-              dragTransition={{ bounceStiffness: 300, bounceDamping: 25 }}
-              initial={{ opacity: 0, scale: 0.85, rotate: slot.rotate * 3 }}
-              animate={{ opacity: 1, scale: 1, rotate: slot.rotate }}
-              exit={{ opacity: 0, scale: 0.85 }}
-              transition={{ type: "spring", stiffness: 220, damping: 20 }}
-              whileHover={{
-                scale: 1.04,
-                rotate: 0,
-                boxShadow: "0 18px 40px -12px rgb(0 0 0 / 0.25)",
-              }}
-              whileDrag={{
-                scale: 1.08,
-                rotate: 0,
-                boxShadow: "0 28px 60px -14px rgb(0 0 0 / 0.35)",
-                cursor: "grabbing",
-              }}
-              onPointerDown={() => {
-                dragged.current = false;
-                bringToFront(project.id);
-              }}
-              onDragStart={() => {
-                dragged.current = true;
-              }}
-              onClick={() => {
-                if (!dragged.current) router.push(`/work/${project.slug}`);
-              }}
-              className="group absolute cursor-grab bg-white p-2 shadow-md"
-              style={{
-                width: `min(${width}px, calc(100% - 32px))`,
-                left: `max(16px, min(${slot.left}%, calc(100% - ${width + 16}px)))`,
-                top: `${slot.top}%`,
-                zIndex: zIndex[project.id] ?? 0,
-              }}
-            >
-              {/* Frame: 12px top/bottom and 40px left/right around the mock, which always shows in full */}
-              <div className="bg-surface-200 px-10 py-3">
-                <div className="relative" style={{ aspectRatio: ratio }}>
-                  <Image
-                    src={project.thumbnail}
-                    alt={project.title}
-                    fill
-                    sizes={`${width}px`}
-                    draggable={false}
-                    className={`pointer-events-none select-none object-contain ${
-                      project.video ? "transition-opacity duration-200 group-hover:opacity-0" : ""
-                    }`}
-                  />
-                  {project.video && <CardVideo src={project.video} label={project.title} />}
-                </div>
-              </div>
-
-              <div className="select-none px-1 pb-1 pt-3">
-                <div className="flex items-center justify-between text-xs uppercase tracking-wide text-text-muted">
-                  <span>{project.company}</span>
-                  <span>{project.year}</span>
-                </div>
-                <h3 className="mt-1.5 text-sm font-medium leading-snug text-text-primary">
-                  {project.title}
-                </h3>
-                <Link
-                  href={`/work/${project.slug}`}
-                  onClick={(e) => e.stopPropagation()}
-                  className="mt-3 flex h-5 translate-y-1 items-center gap-1 text-sm text-red-700 opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100 focus-visible:translate-y-0 focus-visible:opacity-100"
+    <div className="relative h-[70vh] min-h-[520px] overflow-hidden lg:h-[calc(100vh-3rem)]">
+      {/* With scrolling on, wheel / trackpad / touch / arrow keys move around the board; no scrollbars */}
+      <div
+        ref={scrollerRef}
+        tabIndex={SCROLL_TO_EXPLORE ? 0 : undefined}
+        aria-label={SCROLL_TO_EXPLORE ? "Project canvas. Scroll to explore." : "Project canvas"}
+        className={`absolute inset-0 outline-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
+          SCROLL_TO_EXPLORE ? "overflow-auto overscroll-contain" : "overflow-hidden"
+        }`}
+      >
+        <div
+          ref={boardRef}
+          className="relative"
+          style={{ width: `${BOARD_SCALE * 100}%`, height: `${BOARD_SCALE * 100}%` }}
+        >
+          <AnimatePresence>
+            {projects.map((project, index) => {
+              const slot = layout[index % layout.length];
+              const ratio = project.thumbnailRatio ?? DEFAULT_RATIO;
+              const width = cardWidth(ratio);
+              return (
+                <motion.div
+                  key={project.id}
+                  drag
+                  dragConstraints={boardRef}
+                  dragElastic={0.12}
+                  dragMomentum={false}
+                  dragTransition={{ bounceStiffness: 300, bounceDamping: 25 }}
+                  initial={{ opacity: 0, scale: 0.85, rotate: slot.rotate * 3 }}
+                  animate={{ opacity: 1, scale: 1, rotate: slot.rotate }}
+                  exit={{ opacity: 0, scale: 0.85 }}
+                  transition={{ type: "spring", stiffness: 220, damping: 20 }}
+                  whileHover={{
+                    scale: 1.04,
+                    rotate: 0,
+                    boxShadow: "0 18px 40px -12px rgb(0 0 0 / 0.25)",
+                  }}
+                  whileDrag={{
+                    scale: 1.08,
+                    rotate: 0,
+                    boxShadow: "0 28px 60px -14px rgb(0 0 0 / 0.35)",
+                    cursor: "grabbing",
+                  }}
+                  onPointerDown={() => {
+                    dragged.current = false;
+                    bringToFront(project.id);
+                  }}
+                  onDragStart={() => {
+                    dragged.current = true;
+                  }}
+                  onClick={() => {
+                    if (!dragged.current) router.push(`/work/${project.slug}`);
+                  }}
+                  className="group absolute cursor-grab bg-card p-2 shadow-md dark:border dark:border-slate-200"
+                  style={{
+                    width: `min(${width}px, calc(100% - 32px))`,
+                    left: `max(16px, min(${boardPercent(slot.x)}%, calc(100% - ${width + 16}px)))`,
+                    top: `${boardPercent(slot.y)}%`,
+                    zIndex: zIndex[project.id] ?? 0,
+                  }}
                 >
-                  View case study <span aria-hidden>→</span>
-                </Link>
-              </div>
-            </motion.div>
-          );
-        })}
-      </AnimatePresence>
+                  {/* Frame: 12px top/bottom and 40px left/right around the mock, which always shows in full */}
+                  <div className="bg-surface-200 px-10 py-3">
+                    <div className="relative" style={{ aspectRatio: ratio }}>
+                      <Image
+                        src={project.thumbnail}
+                        alt={project.title}
+                        fill
+                        sizes={`${width}px`}
+                        draggable={false}
+                        className={`pointer-events-none select-none object-contain ${
+                          project.video
+                            ? "transition-opacity duration-200 group-hover:opacity-0"
+                            : ""
+                        }`}
+                      />
+                      {project.video && <CardVideo src={project.video} label={project.title} />}
+                    </div>
+                  </div>
 
-      {/* Hint */}
+                  <div className="select-none px-1 pb-1 pt-3">
+                    <div className="flex items-baseline justify-between text-xs uppercase tracking-wide text-text-muted">
+                      <CompanyName project={project} />
+                      <span className="font-mono">{project.year}</span>
+                    </div>
+                    <h3 className="mt-1.5 text-sm font-medium leading-snug text-text-primary">
+                      {project.title}
+                    </h3>
+                    <Link
+                      href={`/work/${project.slug}`}
+                      onClick={(e) => e.stopPropagation()}
+                      className="mt-3 flex h-5 translate-y-1 items-center gap-1 text-sm text-red-700 opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100 focus-visible:translate-y-0 focus-visible:opacity-100"
+                    >
+                      View case study <span aria-hidden>→</span>
+                    </Link>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </div>
+      </div>
+
+      {/* Hint — stays put while the board scrolls */}
       <p className="pointer-events-none absolute bottom-4 right-4 z-[100000] text-xs uppercase tracking-wide text-text-muted">
-        Drag cards · click to open
+        {SCROLL_TO_EXPLORE ? "Scroll to explore · Drag cards · Click to open" : "Drag cards · Click to open"}
       </p>
     </div>
   );

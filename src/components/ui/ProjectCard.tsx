@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Project } from "@/lib/data";
 import { CardVideo } from "@/components/ui/CardVideo";
+import { CompanyName } from "@/components/ui/CompanyName";
 
 type Props = {
   project: Project;
@@ -23,10 +24,10 @@ export function ProjectCard({ project, index }: Props) {
         {/* Details */}
         <div className="mb-4 grid grid-cols-1 items-center gap-4 sm:grid-cols-2 sm:gap-8">
           <div>
-            <div className="mb-2 flex items-center gap-2 text-base text-text-muted">
-              <span>{project.company}</span>
+            <div className="mb-2 flex items-baseline gap-2 text-base text-text-muted">
+              <CompanyName project={project} />
               <span>·</span>
-              <span>{project.year}</span>
+              <span className="font-mono">{project.year}</span>
             </div>
             <h3 className="text-lg font-serif font-medium leading-snug text-text-primary transition-colors group-hover:text-red">
               {project.title}

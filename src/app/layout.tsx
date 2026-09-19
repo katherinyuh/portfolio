@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import "@/styles/globals.css";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { TopBar } from "@/components/layout/TopBar";
@@ -15,6 +16,15 @@ export const metadata: Metadata = {
   description: siteConfig.bio,
 };
 
+// Lets the browser match its own UI (scrollbars, mobile address bar) to the visitor's theme.
+export const viewport: Viewport = {
+  colorScheme: "light dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#F4F4F5" },
+    { media: "(prefers-color-scheme: dark)", color: "#08090A" },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -22,7 +32,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${GeistSans.variable} font-sans`}>
+      <body className={`${GeistSans.variable} ${GeistMono.variable} font-sans`}>
         <IntroScreen />
         <ViewProvider>
           <div className="min-h-screen">

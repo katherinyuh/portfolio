@@ -1,7 +1,10 @@
 import type { Config } from "tailwindcss";
 
+// A colour that reads its RGB channels from a CSS variable, so Tailwind opacity modifiers still work.
+const themed = (name: string) => `rgb(var(--${name}) / <alpha-value>)`;
+
 const config: Config = {
-  darkMode: "class",
+  darkMode: "media", // follow the visitor's system light/dark setting
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -9,48 +12,51 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      // Colours come from CSS variables (see src/styles/globals.css), which hold the light values by
+      // default and swap to the dark values when the system is in dark mode.
       colors: {
-        // Warm off-white surface palette (Mercury.com inspired light mode)
+        card: themed("card"),
         surface: {
-          50:  "#fbfcfd", // page background
-          100: "#f2ede6", // sidebar background
-          200: "#e8e1d8", // card background
-          300: "#d4cbbf", // borders
-          400: "#b8ada0", // muted borders
+          50: themed("surface-50"), // page background
+          100: themed("surface-100"),
+          200: themed("surface-200"), // image frames
+          300: themed("surface-300"), // borders
+          400: themed("surface-400"), // muted borders
         },
         text: {
-          primary:   "#1a1814", // near-black headings
-          secondary: "#4a4540", // body text
-          muted:     "#8c8680", // labels, placeholders
+          primary: themed("text-primary"), // headings
+          secondary: themed("text-secondary"), // body text
+          muted: themed("text-muted"), // labels, placeholders
         },
         red: {
-          50:  "#FEF2F2",
+          50: "#FEF2F2",
           100: "#FDE3E3",
           200: "#FCCCCC",
           300: "#F9A8A8",
           400: "#F37676",
           500: "#E84B4B",
           600: "#D52D2D",
-          700: "#B22222",
+          700: themed("red"), // links / active state
           800: "#942020",
           900: "#7B2121",
           950: "#430C0C",
-          DEFAULT: "#B22222", // firebrick red
-          muted:   "#FDE3E3", // red bg tint
+          DEFAULT: themed("red"),
+          muted: themed("red-muted"), // red bg tint
         },
+        // In dark mode this scale is inverted, so 50 is the page background and 950 the brightest.
         slate: {
-          50:  "#F4F4F5",
-          100: "#EEEEF0",
-          200: "#DADADD",
-          300: "#B9BAC0",
-          400: "#93949D",
-          500: "#767681",
-          600: "#606169",
-          700: "#4E4E56",
-          800: "#434349",
-          900: "#3B3C3F",
-          950: "#27272A",
-          DEFAULT: "#F4F4F5",
+          50: themed("slate-50"),
+          100: themed("slate-100"),
+          200: themed("slate-200"),
+          300: themed("slate-300"),
+          400: themed("slate-400"),
+          500: themed("slate-500"),
+          600: themed("slate-600"),
+          700: themed("slate-700"),
+          800: themed("slate-800"),
+          900: themed("slate-900"),
+          950: themed("slate-950"),
+          DEFAULT: themed("slate-50"),
         },
       },
       fontSize: {
@@ -67,7 +73,7 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
         serif: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
-        mono: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
+        mono: ["var(--font-geist-mono)", "ui-monospace", "monospace"],
       },
       animation: {
         "fade-up": "fadeUp 0.5s ease forwards",

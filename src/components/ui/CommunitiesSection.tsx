@@ -20,15 +20,15 @@ export default function CommunitiesSection({ items }: CommunitiesSectionProps) {
 
   return (
     <div>
-      <h2 className="text-3xl font-serif font-medium text-text-primary mb-1">
+      <h2 className="text-xl font-serif font-medium text-text-primary mb-1">
         My work-life balance 😎
       </h2>
       <p className="text-base font-sans text-text-muted mb-8">Here are things I love (not ordered):</p>
 
       <div className="flex gap-12 items-start">
-        {/* Left: 3×2 image grid, fills all space up to the text panel */}
+        {/* Left: 2-column × 3-row image grid, fills all space up to the text panel */}
         <div
-          className="flex-[3] grid grid-cols-3 gap-3"
+          className="flex-[3] grid grid-cols-2 gap-3"
           onMouseLeave={() => setHoveredIndex(null)}
         >
           {items.map((item, i) => (
@@ -80,12 +80,14 @@ export default function CommunitiesSection({ items }: CommunitiesSectionProps) {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <h3 className="text-2xl font-serif text-text-primary mb-3">
+                <p className="text-base font-sans text-text-secondary leading-relaxed">
                   {items[hoveredIndex].title}
-                </h3>
-                <p className="text-base text-text-secondary leading-relaxed">
-                  {items[hoveredIndex].description}
                 </p>
+                {items[hoveredIndex].description && (
+                  <p className="text-base font-sans text-text-secondary leading-relaxed mt-3">
+                    {items[hoveredIndex].description}
+                  </p>
+                )}
               </motion.div>
             )}
           </AnimatePresence>

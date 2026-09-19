@@ -42,8 +42,7 @@ export default function AboutPage() {
   const [imageError, setImageError] = useState(false);
 
   return (
-    <div className="bg-slate-50">
-      <div className="px-[120px] pt-10">
+    <div className="bg-slate-50 px-[120px] pt-10">
       {/* Intro */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
@@ -76,25 +75,19 @@ export default function AboutPage() {
             Hello! My name is Katherine!
           </h2>
           <p className="text-base font-sans text-text-secondary leading-relaxed mb-3">
-            I&apos;m a product designer who co-creates with product managers, engineers, and
-            product marketing managers to ship B2B interfaces. Currently a fourth-year at
-            UC Davis studying Cognitive Science, and previously a product design intern at IBM
-            on the Z DevOps team.
-          </p>
-          <p className="text-base font-sans text-text-secondary leading-relaxed mb-3">
-            Outside of work, I mentor designers at Design Interactive and build products for
-            the UC Davis community at AggieWorks.
+            {
+              "I’m an ex-pharmaceutical chemistry major (and chronic emoji user) who wishes she had bought a better laptop if she’d known how much she’d end up using it…. But since becoming a designer, I've come very far, and I'm always looking ahead to what comes next for me and my career (personally, I want to beat Candy Crush Saga)."
+            }
           </p>
         </div>
       </motion.div>
-      </div>
 
-      {/* Love letter to communities — spans the full remaining screen width */}
+      {/* Love letter to communities — same 120px side padding as the intro */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="pl-8 mb-12"
+        className="mb-12"
       >
         <CommunitiesSection items={communities} />
       </motion.div>

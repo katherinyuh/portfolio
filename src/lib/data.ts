@@ -14,6 +14,8 @@ export type Project = {
   hero?: string;
   /** Short demo clip (in /public/videos) that plays when the project card is hovered. */
   video?: string;
+  /** Company logo shown on the project cards instead of the name; one per theme. */
+  logo?: { light: string; dark: string };
   /** Width / height of the thumbnail, so cards can show it uncropped. Defaults to 4:3. */
   thumbnailRatio?: number;
   /** Width / height of the hero image on the case study page. Defaults to thumbnailRatio. */
@@ -56,6 +58,7 @@ export const projects: Project[] = [
       "Launching Clubly's events feature to help 35,000+ UC Davis students find events that fit their interests while enabling clubs to grow attendance.",
     thumbnail: "/images/clubly-card-v2.webp",
     hero: "/images/clubly.webp",
+    logo: { light: "/images/logos/clubly-light.svg", dark: "/images/logos/clubly-dark.svg" },
     video: "/videos/clubly-create-event.mp4",
     thumbnailRatio: 2000 / 1160,
     heroRatio: 2000 / 983,
@@ -165,6 +168,7 @@ export const projects: Project[] = [
       "Streamlining industrial analytics for Laminar Systems' Insights platform to boost adoption and align with facility managers' workflows.",
     thumbnail: "/images/laminar-card-v3.png",
     hero: "/images/laminar.webp",
+    logo: { light: "/images/logos/laminar-light.svg", dark: "/images/logos/laminar-dark.svg" },
     thumbnailRatio: 2000 / 1160,
     heroRatio: 2000 / 983,
     featured: true,
@@ -181,6 +185,7 @@ export const projects: Project[] = [
       "12-week product design internship focused on developer tools across IBM Cloud.",
     thumbnail: "/images/ibm-card-v2.png",
     hero: "/images/ibm.webp",
+    logo: { light: "/images/logos/ibm-light.svg", dark: "/images/logos/ibm-dark.svg" },
     thumbnailRatio: 2000 / 1160,
     heroRatio: 2000 / 983,
     featured: true,
