@@ -7,9 +7,13 @@ export type Project = {
   title: string;
   company: string;
   year: string;
+  category: "Product" | "Brand";
   tags: string[];
   description: string;
   thumbnail: string;
+  hero?: string;
+  /** Width / height of the thumbnail, so cards can show it uncropped. Defaults to 4:3. */
+  thumbnailRatio?: number;
   featured?: boolean;
   slug: string;
   caseStudy?: CaseStudyBlock[];
@@ -20,7 +24,7 @@ export const siteConfig = {
   name: "Katherine Liu",
   role: "Product Designer",
   location: "San Francisco Bay Area",
-  bio: "Product designer passionate about creating interfaces that stay clear even when the problem underneath is complicated.",
+  bio: "Product designer blending B2B experience, coding knowledge, and thoughtful execution, with an endless love for 🍚.",
   email: "katherinyuh@ucdavis.edu",
 };
 
@@ -41,11 +45,14 @@ export const projects: Project[] = [
     id: "2",
     title: "University event discovery and management platform",
     company: "Clubly",
-    year: "2025 – Present",
+    year: "2025",
+    category: "Product",
     tags: ["Mobile", "Design Systems", "Prototyping"],
     description:
       "Launching Clubly's events feature to help 35,000+ UC Davis students find events that fit their interests while enabling clubs to grow attendance.",
-    thumbnail: "/images/project-2.jpg",
+    thumbnail: "/images/clubly.webp",
+    hero: "/images/clubly.webp",
+    thumbnailRatio: 2000 / 983,
     slug: "clubly",
     liveUrl: "https://clubly.org/events",
     caseStudy: [
@@ -146,34 +153,43 @@ export const projects: Project[] = [
     title: "Industrial analytics dashboard redesign",
     company: "Laminar Systems",
     year: "2025",
+    category: "Product",
     tags: ["User Research", "Product Design", "Figma"],
     description:
       "Streamlining industrial analytics for Laminar Systems' Insights platform to boost adoption and align with facility managers' workflows.",
-    thumbnail: "/images/project-1.jpg",
+    thumbnail: "/images/laminar.webp",
+    hero: "/images/laminar.webp",
+    thumbnailRatio: 2000 / 983,
     featured: true,
     slug: "route-optimization",
   },
   {
     id: "3",
-    title: "IBM Internship",
+    title: "Modern VS Code tooling for IBM Z mainframe development",
     company: "IBM",
-    year: "2025",
+    year: "2026",
+    category: "Product",
     tags: ["Enterprise UX", "B2B", "Design Systems"],
     description:
-      "12-week product design internship focused on enterprise workflow tooling across IBM Cloud.",
-    thumbnail: "/images/project-3.jpg",
+      "12-week product design internship focused on developer tools across IBM Cloud.",
+    thumbnail: "/images/ibm.webp",
+    hero: "/images/ibm.webp",
+    thumbnailRatio: 2000 / 983,
     featured: true,
     slug: "ibm",
   },
   {
     id: "4",
-    title: "Benevolent Bandwidth",
-    company: "Nonprofit",
-    year: "2023",
+    title: "Delivery Optimizer",
+    company: "Benevolent Bandwidth",
+    year: "2026",
+    category: "Brand",
     tags: ["Branding", "Web Design", "Accessibility"],
     description:
       "Visual identity and website for a nonprofit connecting communities to digital resources.",
-    thumbnail: "/images/project-4.jpg",
+    thumbnail: "/images/benevolent-bandwidth.webp",
+    hero: "/images/benevolent-bandwidth.webp",
+    thumbnailRatio: 2000 / 983,
     slug: "benevolent-bandwidth",
   },
 ];

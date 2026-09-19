@@ -43,7 +43,7 @@
 
 @layer components {
   .nav-link {
-    @apply flex items-center gap-3 h-[21px] rounded-none text-sm text-text-secondary
+    @apply flex items-center gap-3 h-[24px] rounded-none text-base text-text-secondary
            transition-all duration-200 relative
            hover:text-red-700;
   }

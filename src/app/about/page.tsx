@@ -53,14 +53,14 @@ export default function AboutPage() {
       >
         {/* Left column: photo */}
         <div className="w-full md:w-[280px] shrink-0">
-          <div className="relative aspect-[3/4] w-full rounded-xl overflow-hidden bg-surface-200">
+          <div className="relative aspect-[3/4] w-full overflow-hidden bg-surface-200">
             {imageError ? (
               <div className="absolute inset-0 flex items-center justify-center text-sm text-text-muted">
                 Photo
               </div>
             ) : (
               <Image
-                src="/images/katherine.jpg"
+                src="/images/katherine.png"
                 alt="Katherine"
                 fill
                 className="object-cover"
@@ -77,9 +77,9 @@ export default function AboutPage() {
           </h2>
           <p className="text-base font-sans text-text-secondary leading-relaxed mb-3">
             I&apos;m a product designer who co-creates with product managers, engineers, and
-            product marketing managers to ship B2B interfaces. Currently a rising senior at
-            UC Davis studying Cognitive Science, and a product design intern at IBM on the
-            Z DevOps team.
+            product marketing managers to ship B2B interfaces. Currently a fourth-year at
+            UC Davis studying Cognitive Science, and previously a product design intern at IBM
+            on the Z DevOps team.
           </p>
           <p className="text-base font-sans text-text-secondary leading-relaxed mb-3">
             Outside of work, I mentor designers at Design Interactive and build products for

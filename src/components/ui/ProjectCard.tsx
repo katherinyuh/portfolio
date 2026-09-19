@@ -12,29 +12,32 @@ type Props = {
 
 export function ProjectCard({ project, index }: Props) {
   return (
-    <motion.div
+    <motion.article
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0 }}
       transition={{ duration: 0.4, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
     >
       <Link href={`/work/${project.slug}`} className="group block">
         {/* Details */}
-        <div className="grid grid-cols-2 gap-8 mb-4 items-center">
+        <div className="mb-4 grid grid-cols-1 items-center gap-4 sm:grid-cols-2 sm:gap-8">
           <div>
-            <p className="text-base text-text-muted mb-2">{project.company}</p>
-            <h3 className="text-lg font-serif font-medium text-text-primary leading-snug group-hover:text-red transition-colors mb-1">
+            <div className="mb-2 flex items-center gap-2 text-base text-text-muted">
+              <span>{project.company}</span>
+              <span>·</span>
+              <span>{project.year}</span>
+            </div>
+            <h3 className="text-lg font-serif font-medium leading-snug text-text-primary transition-colors group-hover:text-red">
               {project.title}
             </h3>
-            <p className="text-base text-text-muted">{project.year}</p>
           </div>
-          <p className="text-base text-text-muted leading-relaxed">
-            {project.description}
-          </p>
+          <p className="text-base leading-relaxed text-text-muted">{project.description}</p>
         </div>
 
-        {/* Thumbnail */}
+        {/* Thumbnail — shown whole, never cropped */}
         <motion.div
-          className="relative aspect-[16/9] rounded-xl overflow-hidden bg-surface-300"
+          className="relative overflow-hidden bg-surface-200"
+          style={{ aspectRatio: project.thumbnailRatio ?? 16 / 9 }}
           whileHover={{ y: -4 }}
           transition={{ duration: 0.2, ease: "easeOut" }}
         >
@@ -42,7 +45,8 @@ export function ProjectCard({ project, index }: Props) {
             src={project.thumbnail}
             alt={project.title}
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            sizes="(min-width: 1024px) 70vw, 100vw"
+            className="object-cover"
           />
           {/* Overlay on hover */}
           <motion.div
@@ -53,6 +57,6 @@ export function ProjectCard({ project, index }: Props) {
           />
         </motion.div>
       </Link>
-    </motion.div>
+    </motion.article>
   );
 }

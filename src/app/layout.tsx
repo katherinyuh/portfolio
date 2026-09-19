@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import "@/styles/globals.css";
 import { Sidebar } from "@/components/layout/Sidebar";
+import { TopBar } from "@/components/layout/TopBar";
+import { ViewProvider } from "@/components/layout/ViewContext";
 import { IntroScreen } from "@/components/ui/IntroScreen";
 import { siteConfig } from "@/lib/data";
 
@@ -22,12 +24,15 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${GeistSans.variable} font-sans`}>
         <IntroScreen />
-        <div className="flex min-h-screen">
-          <Sidebar />
-          <main className="ml-[250px] flex-1 min-h-screen">
-            {children}
-          </main>
-        </div>
+        <ViewProvider>
+          <div className="min-h-screen">
+            <Sidebar />
+            <div className="lg:ml-[320px]">
+              <TopBar />
+              <main className="min-h-[calc(100vh-3rem)]">{children}</main>
+            </div>
+          </div>
+        </ViewProvider>
       </body>
     </html>
   );

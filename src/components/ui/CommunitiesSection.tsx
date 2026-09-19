@@ -34,7 +34,7 @@ export default function CommunitiesSection({ items }: CommunitiesSectionProps) {
           {items.map((item, i) => (
             <div
               key={i}
-              className="relative aspect-video rounded-xl overflow-hidden bg-surface-200 cursor-default"
+              className="relative aspect-video overflow-hidden bg-surface-200 cursor-default"
               style={{
                 opacity: hoveredIndex === null || hoveredIndex === i ? 1 : 0.3,
                 transition: "opacity 0.3s ease",
@@ -42,7 +42,7 @@ export default function CommunitiesSection({ items }: CommunitiesSectionProps) {
               onMouseEnter={() => setHoveredIndex(i)}
             >
               {imageErrors[i] ? (
-                <div className="absolute inset-0 bg-surface-200 rounded-xl" />
+                <div className="absolute inset-0 bg-surface-200" />
               ) : (
                 <Image
                   src={item.image}
@@ -68,7 +68,7 @@ export default function CommunitiesSection({ items }: CommunitiesSectionProps) {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="font-mono text-xs uppercase tracking-widest text-text-muted"
+                className="text-xs uppercase tracking-widest text-text-muted"
               >
                 HOVER AN IMAGE 👀
               </motion.p>

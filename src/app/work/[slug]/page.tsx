@@ -2,8 +2,14 @@
 
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { projects, siteConfig, type CaseStudyBlock } from "@/lib/data";
+
+const STROKE = "#DADADD";
+const IMAGE_STROKE = [`1px 0`, `-1px 0`, `0 1px`, `0 -1px`]
+  .map((offset) => `drop-shadow(${offset} 0 ${STROKE})`)
+  .join(" ");
 
 const fallbackCaseStudy: CaseStudyBlock[] = [
   { type: "text", label: "Overview", content: "What was the problem? Who were you designing for?" },
@@ -81,14 +87,31 @@ export default function CaseStudyPage({
         </motion.div>
       )}
 
-      {/* Hero image placeholder */}
+      {/* Hero image (placeholder until the project has one) */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="w-full aspect-video bg-surface-200 rounded-xl border border-surface-300 mb-12 flex items-center justify-center"
+        className={
+          project.hero
+            ? "relative mb-12 w-full bg-surface-200"
+            : "relative w-full aspect-video bg-surface-200 border border-surface-300 mb-12 flex items-center justify-center overflow-hidden"
+        }
+        style={project.hero ? { aspectRatio: project.thumbnailRatio ?? 16 / 9 } : undefined}
       >
-        <p className="text-xs text-text-muted">Add your hero image here</p>
+        {project.hero ? (
+          <Image
+            src={project.hero}
+            alt={project.title}
+            fill
+            sizes="(min-width: 1024px) 70vw, 100vw"
+            className="object-contain"
+            // 1px light stroke that follows the visible image, not the transparent margin around it
+            style={{ filter: IMAGE_STROKE }}
+          />
+        ) : (
+          <p className="text-xs text-text-muted">Add your hero image here</p>
+        )}
       </motion.div>
 
       {/* Case study sections */}
@@ -99,7 +122,7 @@ export default function CaseStudyPage({
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.15 + i * 0.06 }}
-            className="w-full aspect-video bg-surface-200 rounded-xl border border-surface-300 mb-12 flex items-center justify-center"
+            className="w-full aspect-video bg-surface-200 border border-surface-300 mb-12 flex items-center justify-center"
           >
             <p className="text-xs text-text-muted">{block.caption}</p>
           </motion.div>
