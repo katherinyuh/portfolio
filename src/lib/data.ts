@@ -12,8 +12,12 @@ export type Project = {
   description: string;
   thumbnail: string;
   hero?: string;
+  /** Short demo clip (in /public/videos) that plays when the project card is hovered. */
+  video?: string;
   /** Width / height of the thumbnail, so cards can show it uncropped. Defaults to 4:3. */
   thumbnailRatio?: number;
+  /** Width / height of the hero image on the case study page. Defaults to thumbnailRatio. */
+  heroRatio?: number;
   featured?: boolean;
   slug: string;
   caseStudy?: CaseStudyBlock[];
@@ -24,7 +28,7 @@ export const siteConfig = {
   name: "Katherine Liu",
   role: "Product Designer",
   location: "San Francisco Bay Area",
-  bio: "Product designer blending B2B experience, coding knowledge, and thoughtful execution, with an endless love for 🍚.",
+  bio: "Product designer with B2B experience, coding knowledge, and an endless love for 🍚.",
   email: "katherinyuh@ucdavis.edu",
 };
 
@@ -50,9 +54,11 @@ export const projects: Project[] = [
     tags: ["Mobile", "Design Systems", "Prototyping"],
     description:
       "Launching Clubly's events feature to help 35,000+ UC Davis students find events that fit their interests while enabling clubs to grow attendance.",
-    thumbnail: "/images/clubly.webp",
+    thumbnail: "/images/clubly-card-v2.webp",
     hero: "/images/clubly.webp",
-    thumbnailRatio: 2000 / 983,
+    video: "/videos/clubly-create-event.mp4",
+    thumbnailRatio: 2000 / 1160,
+    heroRatio: 2000 / 983,
     slug: "clubly",
     liveUrl: "https://clubly.org/events",
     caseStudy: [
@@ -157,9 +163,10 @@ export const projects: Project[] = [
     tags: ["User Research", "Product Design", "Figma"],
     description:
       "Streamlining industrial analytics for Laminar Systems' Insights platform to boost adoption and align with facility managers' workflows.",
-    thumbnail: "/images/laminar.webp",
+    thumbnail: "/images/laminar-card-v3.png",
     hero: "/images/laminar.webp",
-    thumbnailRatio: 2000 / 983,
+    thumbnailRatio: 2000 / 1160,
+    heroRatio: 2000 / 983,
     featured: true,
     slug: "route-optimization",
   },
@@ -172,9 +179,10 @@ export const projects: Project[] = [
     tags: ["Enterprise UX", "B2B", "Design Systems"],
     description:
       "12-week product design internship focused on developer tools across IBM Cloud.",
-    thumbnail: "/images/ibm.webp",
+    thumbnail: "/images/ibm-card-v2.png",
     hero: "/images/ibm.webp",
-    thumbnailRatio: 2000 / 983,
+    thumbnailRatio: 2000 / 1160,
+    heroRatio: 2000 / 983,
     featured: true,
     slug: "ibm",
   },
@@ -189,7 +197,8 @@ export const projects: Project[] = [
       "Visual identity and website for a nonprofit connecting communities to digital resources.",
     thumbnail: "/images/benevolent-bandwidth.webp",
     hero: "/images/benevolent-bandwidth.webp",
-    thumbnailRatio: 2000 / 983,
+    thumbnailRatio: 2000 / 1160,
+    heroRatio: 2000 / 983,
     slug: "benevolent-bandwidth",
   },
 ];

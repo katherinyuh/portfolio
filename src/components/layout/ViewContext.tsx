@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState } from "react";
 
-export const views = ["Canvas", "Grid", "List"] as const;
+export const views = ["Canvas", "List"] as const;
 export type View = (typeof views)[number];
 
 const ViewContext = createContext<{ view: View; setView: (v: View) => void } | null>(null);

@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Project } from "@/lib/data";
+import { CardVideo } from "@/components/ui/CardVideo";
 
 type Props = {
   project: Project;
@@ -34,27 +35,24 @@ export function ProjectCard({ project, index }: Props) {
           <p className="text-base leading-relaxed text-text-muted">{project.description}</p>
         </div>
 
-        {/* Thumbnail — shown whole, never cropped */}
+        {/* Frame: 12px top/bottom and 80px left/right around the mock, which always shows in full */}
         <motion.div
-          className="relative overflow-hidden bg-surface-200"
-          style={{ aspectRatio: project.thumbnailRatio ?? 16 / 9 }}
+          className="bg-surface-200 px-20 py-3"
           whileHover={{ y: -4 }}
           transition={{ duration: 0.2, ease: "easeOut" }}
         >
-          <Image
-            src={project.thumbnail}
-            alt={project.title}
-            fill
-            sizes="(min-width: 1024px) 70vw, 100vw"
-            className="object-cover"
-          />
-          {/* Overlay on hover */}
-          <motion.div
-            className="absolute inset-0 bg-red/10"
-            initial={{ opacity: 0 }}
-            whileHover={{ opacity: 1 }}
-            transition={{ duration: 0.2 }}
-          />
+          <div className="relative" style={{ aspectRatio: project.thumbnailRatio ?? 16 / 9 }}>
+            <Image
+              src={project.thumbnail}
+              alt={project.title}
+              fill
+              sizes="(min-width: 1024px) 70vw, 100vw"
+              className={`object-contain ${
+                project.video ? "transition-opacity duration-200 group-hover:opacity-0" : ""
+              }`}
+            />
+            {project.video && <CardVideo src={project.video} label={project.title} />}
+          </div>
         </motion.div>
       </Link>
     </motion.article>

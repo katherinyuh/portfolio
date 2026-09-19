@@ -1,7 +1,6 @@
 "use client";
 
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { projects, siteConfig, type CaseStudyBlock } from "@/lib/data";
@@ -32,21 +31,6 @@ export default function CaseStudyPage({
 
   return (
     <div className="px-16 py-10 w-full">
-      {/* Back */}
-      <motion.div
-        initial={{ opacity: 0, x: -8 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.3 }}
-        className="mb-8"
-      >
-        <Link
-          href="/"
-          className="inline-flex items-center gap-1.5 text-xs text-text-muted hover:text-text-primary transition-colors"
-        >
-          ← Back
-        </Link>
-      </motion.div>
-
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
@@ -97,7 +81,11 @@ export default function CaseStudyPage({
             ? "relative mb-12 w-full bg-surface-200"
             : "relative w-full aspect-video bg-surface-200 border border-surface-300 mb-12 flex items-center justify-center overflow-hidden"
         }
-        style={project.hero ? { aspectRatio: project.thumbnailRatio ?? 16 / 9 } : undefined}
+        style={
+          project.hero
+            ? { aspectRatio: project.heroRatio ?? project.thumbnailRatio ?? 16 / 9 }
+            : undefined
+        }
       >
         {project.hero ? (
           <Image
@@ -132,7 +120,7 @@ export default function CaseStudyPage({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.15 + i * 0.06 }}
-            className="mb-12"
+            className="mx-auto mb-12 max-w-prose"
           >
             {block.label && (
               <p className="text-xs font-sans text-text-muted uppercase tracking-wider mb-4">
@@ -142,7 +130,7 @@ export default function CaseStudyPage({
             {(Array.isArray(block.content) ? block.content : [block.content]).map((paragraph, j) => (
               <p
                 key={j}
-                className={`text-base text-text-muted max-w-prose ${project.caseStudy ? "" : "italic"} ${j > 0 ? "mt-3" : ""}`}
+                className={`text-base text-text-muted ${project.caseStudy ? "" : "italic"} ${j > 0 ? "mt-3" : ""}`}
               >
                 {paragraph}
               </p>

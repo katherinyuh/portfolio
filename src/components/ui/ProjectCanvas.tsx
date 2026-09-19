@@ -6,27 +6,31 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Project } from "@/lib/data";
+import { CardVideo } from "@/components/ui/CardVideo";
 
 // Scattered starting spots (% of the canvas) and tilt, keyed by project order.
 const layout = [
   { left: 4, top: 6, rotate: -5 },
   { left: 34, top: 38, rotate: 3 },
   { left: 56, top: 4, rotate: -2 },
-  { left: 12, top: 50, rotate: 4 },
+  { left: 12, top: 46, rotate: 4 },
 ];
 
 const DEFAULT_RATIO = 4 / 3;
 
-// Wide images get a wider card so they stay readable.
-const cardWidth = (ratio: number) => (ratio > 1.6 ? 440 : 320);
-
-type Props = {
-  projects: Project[];
-  /** Every project, so positions stay put when a filter hides some. */
-  allProjects: Project[];
+// The mock is shown 1.25× bigger than it was at the earlier card widths (320px, or 440px for wide
+// images), measured with 24px of side padding. Around the mock sit the card's own 8px border on each
+// side and the frame's 40px of side padding on each side; those are added on top so the mock keeps
+// that size and is never cropped.
+const EARLIER_CHROME_X = 16 + 48;
+const CARD_CHROME_X = 16 + 80;
+const MOCK_SCALE = 1.25;
+const cardWidth = (ratio: number) => {
+  const base = ratio > 1.8 ? 440 : 320;
+  return Math.round((base - EARLIER_CHROME_X) * MOCK_SCALE + CARD_CHROME_X);
 };
 
-export function ProjectCanvas({ projects, allProjects }: Props) {
+export function ProjectCanvas({ projects }: { projects: Project[] }) {
   const router = useRouter();
   const canvasRef = useRef<HTMLDivElement>(null);
   const dragged = useRef(false);
@@ -44,8 +48,8 @@ export function ProjectCanvas({ projects, allProjects }: Props) {
       className="relative h-[70vh] min-h-[520px] touch-none overflow-hidden lg:h-[calc(100vh-3rem)]"
     >
       <AnimatePresence>
-        {projects.map((project) => {
-          const slot = layout[allProjects.indexOf(project) % layout.length];
+        {projects.map((project, index) => {
+          const slot = layout[index % layout.length];
           const ratio = project.thumbnailRatio ?? DEFAULT_RATIO;
           const width = cardWidth(ratio);
           return (
@@ -54,7 +58,7 @@ export function ProjectCanvas({ projects, allProjects }: Props) {
               drag
               dragConstraints={canvasRef}
               dragElastic={0.12}
-              dragMomentum
+              dragMomentum={false}
               dragTransition={{ bounceStiffness: 300, bounceDamping: 25 }}
               initial={{ opacity: 0, scale: 0.85, rotate: slot.rotate * 3 }}
               animate={{ opacity: 1, scale: 1, rotate: slot.rotate }}
@@ -89,18 +93,21 @@ export function ProjectCanvas({ projects, allProjects }: Props) {
                 zIndex: zIndex[project.id] ?? 0,
               }}
             >
-              <div
-                className="relative overflow-hidden bg-surface-200"
-                style={{ aspectRatio: ratio }}
-              >
-                <Image
-                  src={project.thumbnail}
-                  alt={project.title}
-                  fill
-                  sizes={`${width}px`}
-                  draggable={false}
-                  className="pointer-events-none select-none object-cover"
-                />
+              {/* Frame: 12px top/bottom and 40px left/right around the mock, which always shows in full */}
+              <div className="bg-surface-200 px-10 py-3">
+                <div className="relative" style={{ aspectRatio: ratio }}>
+                  <Image
+                    src={project.thumbnail}
+                    alt={project.title}
+                    fill
+                    sizes={`${width}px`}
+                    draggable={false}
+                    className={`pointer-events-none select-none object-contain ${
+                      project.video ? "transition-opacity duration-200 group-hover:opacity-0" : ""
+                    }`}
+                  />
+                  {project.video && <CardVideo src={project.video} label={project.title} />}
+                </div>
               </div>
 
               <div className="select-none px-1 pb-1 pt-3">
