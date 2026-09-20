@@ -1,13 +1,29 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { navLinks, siteConfig } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
+// When the site was last built, in the visitor's own time zone with AM or PM. The time zone is only known in the
+// browser, so it is filled in after the page loads.
+const BUILT_AT = process.env.NEXT_PUBLIC_BUILD_TIME;
+const formatLocal = (iso: string) =>
+  new Intl.DateTimeFormat("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true,
+  }).format(new Date(iso));
+
 export function Sidebar() {
   const pathname = usePathname();
+  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
+  useEffect(() => {
+    if (BUILT_AT) setLastUpdated(formatLocal(BUILT_AT));
+  }, []);
 
   return (
     <aside className="z-40 flex flex-col border-b border-slate-200 lg:fixed lg:inset-y-0 lg:left-0 lg:w-[320px] lg:border-b-0 lg:border-r">
@@ -29,7 +45,7 @@ export function Sidebar() {
           <p>
             Interned at <span className="font-medium text-text-primary">IBM</span> designing
             developer tools over the summer. Fourth-year cognitive science student at UC
-            Davis.
+            Davis. Open to 2027 opportunities.
           </p>
         </motion.div>
 
@@ -47,6 +63,7 @@ export function Sidebar() {
                 <Link
                   href={link.href}
                   target={link.external ? "_blank" : undefined}
+                  rel={link.external ? "noopener noreferrer" : undefined}
                   className={cn("nav-link", isActive && "active")}
                 >
                   {link.label}
@@ -56,6 +73,11 @@ export function Sidebar() {
           })}
         </nav>
       </div>
+
+      {/* Pinned to the bottom of the sidebar */}
+      {lastUpdated && (
+        <p className="mt-auto px-6 pb-8 text-sm text-text-muted lg:px-8">Last updated: {lastUpdated}</p>
+      )}
     </aside>
   );
 }

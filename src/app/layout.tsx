@@ -1,11 +1,13 @@
 import type { Metadata, Viewport } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
+import { Analytics } from "@vercel/analytics/next";
 import "@/styles/globals.css";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { TopBar } from "@/components/layout/TopBar";
 import { ViewProvider } from "@/components/layout/ViewContext";
 import { IntroScreen } from "@/components/ui/IntroScreen";
+import { CursorCircle } from "@/components/ui/CursorCircle";
 import { siteConfig } from "@/lib/data";
 
 export const metadata: Metadata = {
@@ -34,6 +36,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${GeistSans.variable} ${GeistMono.variable} font-sans`}>
         <IntroScreen />
+        <CursorCircle />
         <ViewProvider>
           <div className="min-h-screen">
             <Sidebar />
@@ -43,6 +46,7 @@ export default function RootLayout({
             </div>
           </div>
         </ViewProvider>
+        <Analytics />
       </body>
     </html>
   );

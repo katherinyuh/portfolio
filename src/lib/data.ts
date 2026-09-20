@@ -45,8 +45,8 @@ export type CaseStudyBlock =
       type: "mentalModels";
       video?: string;
       videoRatio?: number;
-      /** The tools the design drew on (your collage), shown beside the video. */
-      reference?: { src: string; alt: string; width: number; height: number };
+      /** The platforms the design drew on. They wait off to `side` and slide in around the video on scroll. */
+      references?: { src: string; alt: string; width: number; height: number; displayWidth: number; side: "left" | "right" }[];
     }
   | { type: "beforeAfter"; beforeImage?: string; afterImage?: string; beforeVideo?: string; afterVideo?: string; beforeLabel?: string; afterLabel?: string; caption?: string; beforeRatio?: number; afterRatio?: number; beforeNotes?: BeforeNote[]; beforeNotesPosition?: "right" | "below" };
 export type Project = {
@@ -98,10 +98,14 @@ export const siteConfig = {
   email: "katherinyuh@ucdavis.edu",
 };
 
+// Where /resume sends visitors (the page is there so the visit is counted in analytics).
+export const resumeUrl =
+  "https://drive.google.com/file/d/1z5Y7ExbQNaP_qvTs5CdgIhra0BTofc9Q/view?usp=sharing";
+
 export const navLinks = [
   { label: "Work", href: "/", icon: "briefcase" },
   { label: "About", href: "/about", icon: "user" },
-  { label: "Resume", href: "/resume.pdf", icon: "file-text", external: true },
+  { label: "Resume", href: "/resume", icon: "file-text", external: true },
 ];
 
 export const socials = [
@@ -180,12 +184,12 @@ export const projects: Project[] = [
         type: "mentalModels",
         video: "/videos/familiar-mental-models.mp4",
         videoRatio: 1280 / 744,
-        reference: {
-          src: "/images/familiar/reference-tools.svg",
-          alt: "Canva, Discord, Instagram and Google Drive, with the patterns Clubly borrowed boxed in red",
-          width: 644,
-          height: 740,
-        },
+        references: [
+          { src: "/images/familiar/canva.png", alt: "Canva's menu, with Move to Trash last and boxed in red", width: 268, height: 344, displayWidth: 170, side: "left" },
+          { src: "/images/familiar/discord.png", alt: "Discord's menu, with Delete Message last and boxed in red", width: 259, height: 339, displayWidth: 170, side: "right" },
+          { src: "/images/familiar/instagram.png", alt: "Instagram's new post screen, with Recents and Drafts boxed in red", width: 172, height: 222, displayWidth: 110, side: "left" },
+          { src: "/images/familiar/drive.png", alt: "Google Drive's file list, with every item in the same row and boxed in red", width: 461, height: 243, displayWidth: 260, side: "right" },
+        ],
       },
       {
         type: "text",

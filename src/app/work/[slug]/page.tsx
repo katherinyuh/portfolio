@@ -132,7 +132,7 @@ export default function CaseStudyPage({
             <MentalModels
               video={block.video}
               videoRatio={block.videoRatio}
-              reference={block.reference}
+              references={block.references}
             />
           </motion.div>
         ) : block.type === "photoGallery" ? (
@@ -249,11 +249,11 @@ export default function CaseStudyPage({
               ) : (
                 <p
                   key={j}
-                  className={`text-base text-text-muted ${project.caseStudy ? "" : "italic"} ${j > 0 ? "mt-3" : ""}`}
+                  className={`text-base text-text-secondary ${project.caseStudy ? "" : "italic"} ${j > 0 ? "mt-3" : ""}`}
                 >
                   {paragraph.split("**").map((part, k) =>
                     k % 2 === 1 ? (
-                      <strong key={k} className="font-semibold">
+                      <strong key={k} className="font-semibold dark:text-text-primary">
                         {part}
                       </strong>
                     ) : (

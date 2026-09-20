@@ -190,7 +190,7 @@ export default function BeforeAfterSwitcher({
                 {showNotes && (
                   <ul className="space-y-1 xl:w-max xl:shrink-0 xl:self-start">
                     {beforeNotes.map((note) => (
-                      <li key={note.text} className="flex items-start gap-2 text-base text-text-muted">
+                      <li key={note.text} className="flex items-start gap-2 text-base text-text-secondary">
                         <NoteIcon kind={note.icon} />
                         <span>{note.text}</span>
                       </li>

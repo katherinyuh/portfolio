@@ -124,3 +124,9 @@
            bg-surface-300 text-text-secondary;
   }
 }
+
+/* The mouse pointer is drawn as a circle by <CursorCircle/> (mouse devices only), so the real one is hidden. */
+html.circle-cursor,
+html.circle-cursor * {
+  cursor: none !important;
+}

@@ -8,7 +8,6 @@ import { motion } from "framer-motion";
 import { Project } from "@/lib/data";
 import { CardVideo } from "@/components/ui/CardVideo";
 import { CompanyName } from "@/components/ui/CompanyName";
-import { CursorLabel } from "@/components/ui/CursorLabel";
 
 type Props = {
   project: Project;
@@ -149,9 +148,11 @@ export function ProjectCard({ project, index }: Props) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.4, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
       className={`group/row py-6 pl-6 lg:pl-12 ${soon ? "" : "cursor-pointer"}`}
+      // the mouse circle turns into these words over the row
+      data-cursor-label={soon ? "Coming soon" : "View"}
       onClick={soon ? undefined : () => router.push(`/work/${project.slug}`)}
     >
-      {soon ? <CursorLabel label="Coming soon">{row}</CursorLabel> : row}
+      {row}
     </motion.article>
   );
 }

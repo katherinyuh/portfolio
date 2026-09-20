@@ -55,7 +55,7 @@ export default function CardRow({ items: allItems }: { items: CardRowItem[] }) {
             className="bg-surface-200 p-5 rounded-none"
           >
             <h4 className="text-base font-medium text-text-primary">{item.title}</h4>
-            <div className="mt-2 space-y-1 text-base text-text-muted">
+            <div className="mt-2 space-y-1 text-base text-text-secondary">
               {item.points.map((point) => (
                 <p key={point}>{point}</p>
               ))}

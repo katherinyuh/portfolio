@@ -72,7 +72,7 @@
 <path d="M818 32L826 40" stroke="#78716B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M758 34L762 38L766 34" stroke="#78716B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M794 38L790 34L786 38" stroke="#78716B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M9 658V480C9 475.582 12.5817 472 17 472H832C836.418 472 840 475.582 840 480V658C840 662.418 836.418 666 832 666H17C12.5817 666 9 662.418 9 658Z" stroke="#F472B6" stroke-width="4"/>
+<path d="M9 666V472H840V666H9Z" stroke="#B22222" stroke-width="4"/>
 <line x1="229.5" y1="586.5" x2="245.5" y2="586.5" stroke="#5F32C7" stroke-width="2"/>
 <line x1="632.5" y1="586.5" x2="648.5" y2="586.5" stroke="#CA631D" stroke-width="2"/>
 <line x1="431" y1="586.5" x2="447" y2="586.5" stroke="#E5BF63" stroke-width="2"/>

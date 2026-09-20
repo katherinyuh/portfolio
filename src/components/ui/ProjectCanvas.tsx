@@ -120,6 +120,8 @@ export function ProjectCanvas({ projects }: { projects: Project[] }) {
                   onClick={() => {
                     if (!dragged.current && !project.comingSoon) router.push(`/work/${project.slug}`);
                   }}
+                  // the mouse circle turns into these words over the card
+                  data-cursor-label={project.comingSoon ? "Coming soon" : "View"}
                   className="group absolute cursor-grab bg-surface-50 p-2 shadow-md dark:border dark:border-slate-200"
                   style={{
                     width: `min(${width}px, calc(100% - 32px))`,
