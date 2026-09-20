@@ -20,9 +20,9 @@ const BOARD_SCALE = SCROLL_TO_EXPLORE ? 2 : 1;
 // converted to board percentages below; the default view therefore looks the same at any board size.
 const layout = [
   { x: 0.139, y: 0.045, rotate: -5 }, // Clubly: top left
-  { x: 0.024, y: 0.538, rotate: 3 }, // Laminar: bottom left
+  { x: 0.024, y: 0.508, rotate: 3 }, // Laminar: bottom left
   { x: 0.612, y: 0.049, rotate: 3 }, // IBM: top right
-  { x: 0.510, y: 0.518, rotate: -2 }, // Delivery Optimizer: bottom right
+  { x: 0.510, y: 0.488, rotate: -2 }, // Delivery Optimizer: bottom right
 ];
 
 // The first view is the middle of the board: it spans this fraction of it, starting here.
@@ -109,6 +109,7 @@ export function ProjectCanvas({ projects }: { projects: Project[] }) {
                     boxShadow: "0 28px 60px -14px rgb(0 0 0 / 0.35)",
                     cursor: "grabbing",
                   }}
+                  onHoverStart={() => bringToFront(project.id)}
                   onPointerDown={() => {
                     dragged.current = false;
                     bringToFront(project.id);
@@ -154,6 +155,14 @@ export function ProjectCanvas({ projects }: { projects: Project[] }) {
                     <h3 className="mt-1.5 text-sm font-medium leading-snug text-text-primary">
                       {project.title}
                     </h3>
+                    {/* Longer description: opens up on hover, between the title and "View case study" */}
+                    <div className="grid grid-rows-[0fr] opacity-0 transition-[grid-template-rows,opacity] duration-200 group-hover:grid-rows-[1fr] group-hover:opacity-100">
+                      <div className="min-h-0 overflow-hidden">
+                        <p className="pt-2 text-sm leading-relaxed text-text-muted">
+                          {project.description}
+                        </p>
+                      </div>
+                    </div>
                     <Link
                       href={`/work/${project.slug}`}
                       onClick={(e) => e.stopPropagation()}

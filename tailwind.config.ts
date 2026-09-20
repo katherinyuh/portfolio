@@ -59,6 +59,18 @@ const config: Config = {
           DEFAULT: themed("slate-50"),
         },
       },
+      // Square corners everywhere: every radius size is 0, so no `rounded-*` class can round anything.
+      borderRadius: {
+        none: "0",
+        sm: "0",
+        DEFAULT: "0",
+        md: "0",
+        lg: "0",
+        xl: "0",
+        "2xl": "0",
+        "3xl": "0",
+        full: "0",
+      },
       fontSize: {
         xs:   ['var(--font-size-xs)',   { lineHeight: '1.5',   letterSpacing: '0em' }],
         sm:   ['var(--font-size-sm)',   { lineHeight: '1.5',   letterSpacing: '0em' }],

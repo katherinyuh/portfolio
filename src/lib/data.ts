@@ -1,7 +1,10 @@
-export type CaseStudyBlock =
-  | { type: "text"; label?: string; content: string | string[] }
-  | { type: "image"; caption: string };
+/** One line of the pros / cons description shown with the Initial version: a thumbs-up or thumbs-down icon and its text. */
+export type BeforeNote = { icon: "up" | "down"; text: string };
 
+export type CaseStudyBlock =
+  | { type: "text"; label?: string; heading?: string; content?: string | string[] }
+  | { type: "image"; caption: string }
+  | { type: "beforeAfter"; beforeImage: string; afterImage: string; beforeLabel?: string; afterLabel?: string; caption?: string; beforeRatio?: number; afterRatio?: number; beforeNotes?: BeforeNote[]; beforeNotesPosition?: "right" | "below" };
 export type Project = {
   id: string;
   title: string;
@@ -14,8 +17,8 @@ export type Project = {
   hero?: string;
   /** Short demo clip (in /public/videos) that plays when the project card is hovered. */
   video?: string;
-  /** Company logo shown on the project cards instead of the name; one per theme. */
-  logo?: { light: string; dark: string };
+  /** Company logo shown on the project cards instead of the name. `dark` is the dark-theme version; leave it out and the light one is shown as a white silhouette in dark mode. */
+  logo?: { light: string; dark?: string };
   /** Width / height of the thumbnail, so cards can show it uncropped. Defaults to 4:3. */
   thumbnailRatio?: number;
   /** Width / height of the hero image on the case study page. Defaults to thumbnailRatio. */
@@ -68,6 +71,7 @@ export const projects: Project[] = [
       {
         type: "text",
         label: "What's Clubly?",
+        heading: "Connecting 35,000+ students with 209 clubs",
         content: [
           "Clubly, released by Aggieworks in February 2024, is a platform that connects 35,000+ UC Davis students with 209 clubs while giving admins tools to manage profiles and cultivate year-round engagement.",
           "As the sole product designer, I designed the events page on Clubly to let students find events that match their interests and schedules, and to help clubs grow attendance and build stronger communities.",
@@ -77,37 +81,34 @@ export const projects: Project[] = [
       {
         type: "text",
         label: "Problem",
+        heading: "Existing ways to find and promote club events aren’t effective",
         content:
-          "Existing ways to find and promote club events aren't effective. Despite UC Davis' abundance of clubs, students still struggle to find events, relying on word of mouth, flyers, or Instagram. This fragmented process wastes time, causes missed opportunities, and leaves many overwhelmed or missing out. Events can also feel less compelling when students don't have friends to attend with. Meanwhile, club admins invest significant effort and resources, but low turnout limits impact and motivation.",
+          "Despite UC Davis' abundance of clubs, students still struggle to find events, relying on word of mouth, flyers, or Instagram. This fragmented process wastes time, causes missed opportunities, and leaves many overwhelmed or missing out. Events can also feel less compelling when students don't have friends to attend with. Meanwhile, club admins invest significant effort and resources, but low turnout limits impact and motivation.",
       },
       {
         type: "text",
         label: "Solution & Outcomes",
+        heading: "Club event creation and exploration on one platform",
         content:
           "Clubly consolidates event creation and discovery into a single platform, personalizing what students see based on their interests, schedule, and social circle. Within the first week of launch, 20+ events were posted, and the platform acquired 600+ users following a marketing push.",
       },
       {
         type: "text",
         label: "Decisions",
-        content: "Design choices were grounded in research and iterated closely with engineering throughout the build.",
+        heading: "Converting findings and insights into features",
+        content: "To better understand the current experience that students and club admins have with club events, we interviewed a total of 8 students and 12 club admins to identify pain points and refine gesture requirements. From our user interviews, I synthesized and ideated:",
       },
       {
         type: "text",
-        label: "Research insights",
+        heading: "Designing around familiar mental models",
         content:
-          "Interviewed 8 students and 12 club admins to ground the design in how event discovery and promotion actually happened day to day.",
+          "The tools club admins already use (such as social media, Canva, and Google Workspace) informed how I structured interactions. By matching familiar patterns such as button order and form creation, I aimed to reduce friction and make the new flow feel intuitive.",
       },
       {
         type: "text",
-        label: "Familiar mental models",
+        heading: "Supporting multi-day events",
         content:
-          "Aligned new flows with tools admins already trusted — social platforms, Canva, Google Workspace — so the learning curve stayed low.",
-      },
-      {
-        type: "text",
-        label: "Multi-day events",
-        content:
-          "Reworked the event creation form to support multi-day events with customizable time slots per day, iterating from an early version into a clearer final layout.",
+          "Some events, like Design Interactive’s annual Davis Design Fest, spanned multiple days. To accommodate these, I designed an “add another day” option, letting admins customize times for each day.",
       },
       {
         type: "image",
@@ -115,9 +116,9 @@ export const projects: Project[] = [
       },
       {
         type: "text",
-        label: "Filters",
+        heading: "Expanding awareness with filters",
         content:
-          "Added category, date, and \"extras\" filters (free food, merch, rides, raffles) so students could narrow events down to what actually mattered to them.",
+          "Club admins struggled to attract members outside their immediate networks (e.g., it’s difficult to get non-tech students to attend events by tech clubs). Students also worried about missing out on interesting events they didn’t know about. To address both, I integrated filters by category, date, and “extras” (free food, merch, rides, raffles) to improve discovery and attendance.",
       },
       {
         type: "image",
@@ -125,35 +126,51 @@ export const projects: Project[] = [
       },
       {
         type: "text",
-        label: "Admin card layout",
-        content:
-          "The first version of the admin event card grouped information in a way that broke the law of proximity; the final layout regrouped related fields so admins could scan cards faster.",
+        heading: "Admin card layout",
       },
       {
-        type: "image",
-        caption: "Admin event card — initial vs. final layout",
-      },
-      {
-        type: "text",
-        label: "Student card layout",
-        content:
-          "Iterated on the student-facing card after the first version let graphics get cut off — the final version fixed cropping and tightened the visual hierarchy.",
-      },
-      {
-        type: "image",
-        caption: "Student event card — layout iterations",
+        type: "beforeAfter",
+        beforeImage: "/images/Admin Card_ Initial.svg",
+        afterImage: "/images/Admin Card_ Current.svg",
+        beforeRatio: 816 / 208,
+        beforeLabel: "Initial version",
+        afterLabel: "Current version",
+        beforeNotesPosition: "below",
+        beforeNotes: [
+          { icon: "down", text: "UX Law of Proximity" },
+          { icon: "down", text: "Users had trouble differentiating the buttons" },
+        ],
       },
       {
         type: "text",
-        label: "Next steps",
-        content:
-          "Immediate: run usability testing on the current release. Short-term: ship RSVP functionality. Long-term: research a dedicated student dashboard.",
+        heading: "Student card layout",
+      },
+      {
+        type: "beforeAfter",
+        beforeImage: "/images/Student Card_ Initial.svg",
+        afterImage: "/images/Student Card_ Current.svg",
+        beforeRatio: 296 / 344,
+        beforeLabel: "Initial version",
+        afterLabel: "Current version",
+        beforeNotesPosition: "right",
+        beforeNotes: [
+          { icon: "up", text: "Date and time first" },
+          { icon: "up", text: "Similar to current cards" },
+          { icon: "down", text: "Cuts off graphic" },
+        ],
       },
       {
         type: "text",
-        label: "Takeaways",
+        label: "Reflection",
+        heading: "Next steps",
         content:
-          "Pulling engineers into design decisions earlier — not just at handoff — would have caught feasibility issues sooner, like the gradient border implementation that turned out harder to build than scoped. More broadly, this project reinforced how much good cross-functional collaboration shapes the final product.",
+          "Immediate: Conduct usability testing on the student view side. Short-term: Ship out RSVP feature. Long-term: Begin user research for a student dashbaord.",
+      },
+      {
+        type: "text",
+        heading: "Takeaways",
+        content:
+          "Technical feasibility: I initially focused only on UI implementation and overlooked broader technical requirements. In future projects, I’ll aim to holistically collaborate more closely with engineers from the beginning to align on technical scope and constraints (I realized that gradient borders were not fun to code and we weren't able to include the design 😢). Collaboration: Working with PMs, engineers, and graphic designers expanded my understanding of cross-functional teamwork. It was both insightful and rewarding to contribute to a shared vision while learning from my teammates’ expertise.",
       },
     ],
   },
@@ -202,6 +219,7 @@ export const projects: Project[] = [
       "Visual identity and website for a nonprofit connecting communities to digital resources.",
     thumbnail: "/images/benevolent-bandwidth.webp",
     hero: "/images/benevolent-bandwidth.webp",
+    logo: { light: "/images/logos/benevolent-bandwidth.png" },
     thumbnailRatio: 2000 / 1160,
     heroRatio: 2000 / 983,
     slug: "benevolent-bandwidth",

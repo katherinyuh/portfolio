@@ -12,7 +12,7 @@
     --card: 255 255 255;
     --surface-50: 251 252 253;
     --surface-100: 242 237 230;
-    --surface-200: 232 225 216;
+    --surface-200: 242 237 230; /* image beige (#F2EDE6); was #E8E1D8 */
     --surface-300: 212 203 191;
     --surface-400: 184 173 160;
 
@@ -97,7 +97,7 @@
 
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { @apply bg-transparent; }
-  ::-webkit-scrollbar-thumb { @apply bg-surface-300 rounded-full; }
+  ::-webkit-scrollbar-thumb { @apply bg-surface-300 rounded-none; }
   ::-webkit-scrollbar-thumb:hover { @apply bg-surface-400; }
 
   ::selection { @apply bg-red-muted text-red; }
@@ -120,7 +120,7 @@
   }
 
   .tag {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-none text-xs
            bg-surface-300 text-text-secondary;
   }
 }

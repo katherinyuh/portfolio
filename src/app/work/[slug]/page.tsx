@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { projects, siteConfig, type CaseStudyBlock } from "@/lib/data";
+import BeforeAfterSwitcher from "@/components/ui/BeforeAfterSwitcher";
 
 const STROKE = "rgb(var(--slate-200))"; // light hairline; follows the light / dark theme
 const IMAGE_STROKE = [`1px 0`, `-1px 0`, `0 1px`, `0 -1px`]
@@ -114,20 +115,49 @@ export default function CaseStudyPage({
           >
             <p className="text-xs text-text-muted">{block.caption}</p>
           </motion.div>
+        ) : block.type === "beforeAfter" ? (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.15 + i * 0.06 }}
+            className="mx-auto mb-12 max-w-prose w-full"
+          >
+            <BeforeAfterSwitcher
+              beforeImage={block.beforeImage}
+              afterImage={block.afterImage}
+              beforeLabel={block.beforeLabel}
+              afterLabel={block.afterLabel}
+              caption={block.caption}
+              beforeRatio={block.beforeRatio}
+              beforeNotes={block.beforeNotes}
+              beforeNotesPosition={block.beforeNotesPosition}
+              afterRatio={block.afterRatio}
+            />
+          </motion.div>
         ) : (
           <motion.section
             key={i}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.15 + i * 0.06 }}
-            className="mx-auto mb-12 max-w-prose"
+            className={`mx-auto max-w-prose ${block.content ? "mb-12" : "mb-6"}`}
           >
             {block.label && (
               <p className="text-xs font-sans text-text-muted uppercase tracking-wider mb-4">
                 {block.label}
               </p>
             )}
-            {(Array.isArray(block.content) ? block.content : [block.content]).map((paragraph, j) => (
+            {block.heading && (
+              <h3
+                className={`text-xl font-medium leading-snug text-text-primary ${
+                  block.content ? "mb-3" : ""
+                }`}
+              >
+                {block.heading}
+              </h3>
+            )}
+            {(Array.isArray(block.content) ? block.content : block.content ? [block.content] : []).map((paragraph, j) => (
               <p
                 key={j}
                 className={`text-base text-text-muted ${project.caseStudy ? "" : "italic"} ${j > 0 ? "mt-3" : ""}`}

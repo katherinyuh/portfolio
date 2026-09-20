@@ -89,7 +89,7 @@ export function CursorTrailGallery({ children }: { children: React.ReactNode }) 
               animate={{ opacity: 0, scale: 0.3 }}
               transition={{ duration: FADE_DURATION, ease: "easeOut" }}
               onAnimationComplete={() => removeStamp(stamp.id)}
-              className="absolute overflow-hidden rounded-lg shadow-md"
+              className="absolute overflow-hidden rounded-none shadow-md"
               style={{
                 width: STAMP_SIZE,
                 height: STAMP_SIZE,
