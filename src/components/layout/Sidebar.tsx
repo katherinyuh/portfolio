@@ -43,9 +43,8 @@ export function Sidebar() {
         >
           <p>{siteConfig.bio}</p>
           <p>
-            Interned at <span className="font-medium text-text-primary">IBM</span> designing
-            developer tools over the summer. Fourth-year cognitive science student at UC
-            Davis. Open to 2027 opportunities.
+            Currently a fourth-year at UC Davis studying Cognitive Science, and previously a product design intern at <span className="font-medium text-text-primary">IBM</span> on the Z DevOps team.
+            Open to 2027 opportunities.
           </p>
         </motion.div>
 

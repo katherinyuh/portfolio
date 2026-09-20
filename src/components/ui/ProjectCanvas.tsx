@@ -66,7 +66,8 @@ export function ProjectCanvas({ projects }: { projects: Project[] }) {
   };
 
   return (
-    <div className="relative h-[70vh] min-h-[520px] overflow-hidden lg:h-[calc(100vh-3rem)]">
+    // `isolate` keeps the cards' and the hint's z-indexes inside the canvas, so the intro screen covers them all
+    <div className="relative isolate h-[70vh] min-h-[520px] overflow-hidden lg:h-[calc(100vh-3rem)]">
       {/* With scrolling on, wheel / trackpad / touch / arrow keys move around the board; no scrollbars */}
       <div
         ref={scrollerRef}
