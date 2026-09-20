@@ -19,10 +19,10 @@ const BOARD_SCALE = SCROLL_TO_EXPLORE ? 2 : 1;
 // corner, plus its tilt. Keyed by project order. The board is bigger than the view, so these are
 // converted to board percentages below; the default view therefore looks the same at any board size.
 const layout = [
-  { x: 0.139, y: 0.045, rotate: -5 }, // Clubly: top left
-  { x: 0.024, y: 0.479, rotate: 3 }, // Laminar: bottom left
-  { x: 0.612, y: 0.049, rotate: 3 }, // IBM: top right
-  { x: 0.510, y: 0.488, rotate: -2 }, // Delivery Optimizer: bottom right
+  { x: 0.088, y: 0.038, rotate: -5 }, // Clubly: top left
+  { x: 0.591, y: 0.051, rotate: 3 }, // Laminar: top right
+  { x: 0.042, y: 0.5, rotate: 3 }, // IBM: bottom left
+  { x: 0.474, y: 0.467, rotate: -2 }, // Benevolent Bandwidth: bottom right
 ];
 
 // The first view is the middle of the board: it spans this fraction of it, starting here.
@@ -118,9 +118,9 @@ export function ProjectCanvas({ projects }: { projects: Project[] }) {
                     dragged.current = true;
                   }}
                   onClick={() => {
-                    if (!dragged.current) router.push(`/work/${project.slug}`);
+                    if (!dragged.current && !project.comingSoon) router.push(`/work/${project.slug}`);
                   }}
-                  className="group absolute cursor-grab bg-card p-2 shadow-md dark:border dark:border-slate-200"
+                  className="group absolute cursor-grab bg-surface-50 p-2 shadow-md dark:border dark:border-slate-200"
                   style={{
                     width: `min(${width}px, calc(100% - 32px))`,
                     left: `max(16px, min(${boardPercent(slot.x)}%, calc(100% - ${width + 16}px)))`,
@@ -155,7 +155,7 @@ export function ProjectCanvas({ projects }: { projects: Project[] }) {
                     <h3 className="mt-1.5 text-sm font-medium leading-snug text-text-primary">
                       {project.title}
                     </h3>
-                    {/* Longer description: opens up on hover, between the title and "View case study" */}
+                    {/* Longer description: opens up on hover, between the title and the link (or "Coming soon") */}
                     <div className="grid grid-rows-[0fr] opacity-0 transition-[grid-template-rows,opacity] duration-200 group-hover:grid-rows-[1fr] group-hover:opacity-100">
                       <div className="min-h-0 overflow-hidden">
                         <p className="pt-2 text-sm leading-relaxed text-text-muted">
@@ -163,13 +163,19 @@ export function ProjectCanvas({ projects }: { projects: Project[] }) {
                         </p>
                       </div>
                     </div>
-                    <Link
-                      href={`/work/${project.slug}`}
-                      onClick={(e) => e.stopPropagation()}
-                      className="mt-3 flex h-5 translate-y-1 items-center gap-1 text-sm text-red-700 opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100 focus-visible:translate-y-0 focus-visible:opacity-100"
-                    >
-                      View case study <span aria-hidden>→</span>
-                    </Link>
+                    {project.comingSoon ? (
+                      <span className="mt-3 flex h-5 translate-y-1 items-center text-sm text-text-muted opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
+                        Coming soon
+                      </span>
+                    ) : (
+                      <Link
+                        href={`/work/${project.slug}`}
+                        onClick={(e) => e.stopPropagation()}
+                        className="mt-3 flex h-5 translate-y-1 items-center gap-1 text-sm text-red-700 opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100 focus-visible:translate-y-0 focus-visible:opacity-100"
+                      >
+                        View case study <span aria-hidden>→</span>
+                      </Link>
+                    )}
                   </div>
                 </motion.div>
               );

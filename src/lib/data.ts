@@ -38,6 +38,8 @@ export type CaseStudyBlock =
   | { type: "video"; src: string; alt: string; ratio: number }
   | { type: "imageFrame"; src: string; alt: string; width: number; height: number }
   | { type: "cards"; items: CardRowItem[] }
+  /** A closing line at the end of a case study, in the same type as the case study title. */
+  | { type: "closing"; text: string }
   | { type: "photoGallery"; items: PhotoGalleryItem[] }
   | {
       type: "mentalModels";
@@ -56,6 +58,17 @@ export type Project = {
   tags: string[];
   description: string;
   thumbnail: string;
+  /** Pictures shown in the scrolling strip on the list view, in order. Defaults to the thumbnail and hero. `ratio` is width / height. */
+  gallery?: {
+    src: string;
+    alt?: string;
+    /** Shape of the tile in the strip (width / height). */
+    ratio: number;
+    /** Fill the whole tile and crop the picture to it (for photos), instead of fitting it inside with padding (for mock-ups). */
+    cover?: boolean;
+    /** CSS object-position for the crop. */
+    position?: string;
+  }[];
   hero?: string;
   /** Looping clip shown in place of `hero` on the case study page. `box` is where the clip sits inside the hero frame, as % of the frame (the frame's own colour shows around it). */
   heroVideo?: { src: string; box: { x: number; y: number; w: number; h: number } };
@@ -69,6 +82,8 @@ export type Project = {
   heroRatio?: number;
   /** Shown under the title on the case study page. Defaults to the site role. */
   role?: string;
+  /** No case study yet: the canvas card shows "Coming soon" instead of the link, and the card does not open. */
+  comingSoon?: boolean;
   featured?: boolean;
   slug: string;
   caseStudy?: CaseStudyBlock[];
@@ -106,6 +121,11 @@ export const projects: Project[] = [
     description:
       "Launching Clubly's events feature to help 35,000+ UC Davis students find events that fit their interests while enabling clubs to grow attendance.",
     thumbnail: "/images/clubly-card-v2.webp",
+    gallery: [
+      { src: "/images/clubly-card-v2.webp", ratio: 2000 / 1160 },
+      { src: "/images/clubly-student-view.svg", ratio: 1440 / 836 },
+      { src: "/images/team/spring-2026.jpg", ratio: 2000 / 1333 },
+    ],
     hero: "/images/clubly.webp",
     heroVideo: { src: "/videos/clubly-hero.mp4", box: { x: (164 / 1708) * 100, y: (20 / 840) * 100, w: (1378 / 1708) * 100, h: (798 / 840) * 100 } },
     logo: { light: "/images/logos/clubly-light.svg", dark: "/images/logos/clubly-dark.svg" },
@@ -265,6 +285,7 @@ export const projects: Project[] = [
           { src: "/images/team/spring-2026.jpg", alt: "The Clubly team standing together on a tree-lined campus road", caption: "Spring quarter 2026 Clubly photoshoot", ratio: 1408 / 755, wide: true, position: "50% 30%" },
         ],
       },
+      { type: "closing", text: "Thank you for checking this out!" },
     ],
   },
   {
@@ -277,6 +298,11 @@ export const projects: Project[] = [
     description:
       "Streamlining industrial analytics for Laminar's Insights platform to boost adoption and align with facility managers' workflows.",
     thumbnail: "/images/laminar-card-v3.png",
+    gallery: [
+      { src: "/images/laminar-card-v3.png", ratio: 2000 / 1160 },
+      { src: "/images/laminar/summary-hover.svg", ratio: 1280 / 832 },
+      { src: "/images/laminar/team.jpg", alt: "Laminar co-founders & interns", ratio: 2000 / 1160 },
+    ],
     hero: "/images/laminar.webp",
     logo: { light: "/images/logos/laminar-light.svg", dark: "/images/logos/laminar-dark.svg" },
     thumbnailRatio: 2000 / 1160,
@@ -387,6 +413,19 @@ export const projects: Project[] = [
           },
         ],
       },
+      {
+        type: "photoGallery",
+        items: [
+          {
+            src: "/images/laminar/team.jpg",
+            alt: "The Laminar co-founders and interns standing together beside the company door",
+            caption: "Laminar co-founders & interns",
+            ratio: 2000 / 1500,
+            wide: true,
+          },
+        ],
+      },
+      { type: "closing", text: "Thank you for checking this out!" },
     ],
   },
   {
@@ -397,29 +436,35 @@ export const projects: Project[] = [
     category: "Product",
     tags: ["Enterprise UX", "B2B", "Design Systems"],
     description:
-      "12-week product design internship focused on developer tools across IBM Cloud.",
+      "Shipped an unused-variable detection feature for IBM Z Open Editor, a VS Code extension with 200K+ installs",
     thumbnail: "/images/ibm-card-v2.png",
+    gallery: [
+      { src: "/images/ibm-card-v2.png", ratio: 2000 / 1160 },
+    ],
     hero: "/images/ibm.webp",
     logo: { light: "/images/logos/ibm-light.svg", dark: "/images/logos/ibm-dark.svg" },
     thumbnailRatio: 2000 / 1160,
     heroRatio: 2000 / 983,
     featured: true,
+    comingSoon: true,
     slug: "ibm",
   },
   {
     id: "4",
-    title: "Delivery Optimizer",
+    title: "Open-source delivery route optimization for small businesses",
     company: "Benevolent Bandwidth",
     year: "2026",
     category: "Brand",
     tags: ["Branding", "Web Design", "Accessibility"],
     description:
-      "Visual identity and website for a nonprofit connecting communities to digital resources.",
+      "Building an open-source route-planning tool to help small businesses eliminate manual, hours-long delivery planning.",
     thumbnail: "/images/benevolent-bandwidth.webp",
+    gallery: [{ src: "/images/benevolent-bandwidth.webp", ratio: 2000 / 1160 }],
     hero: "/images/benevolent-bandwidth.webp",
     logo: { light: "/images/logos/benevolent-bandwidth.png" },
     thumbnailRatio: 2000 / 1160,
     heroRatio: 2000 / 983,
+    comingSoon: true,
     slug: "benevolent-bandwidth",
   },
 ];

@@ -4,37 +4,67 @@ import { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import CommunitiesSection from "@/components/ui/CommunitiesSection";
+import QASection, { type QAItem } from "@/components/ui/QASection";
 
 const communities = [
   {
-    image: "/images/community-1.jpg",
+    // Photo to come
     title: "My dog!!!",
     description: "",
   },
   {
-    image: "/images/community-2.jpg",
+    image: "/images/about/half-marathon.jpg",
     title: "Dying in a half marathon",
     description: "",
   },
   {
-    image: "/images/community-3.jpg",
+    image: "/images/about/design-interactive.jpg",
+    wide: true,
     title: "Design Interactive (Fall 2025)",
     description: "",
   },
   {
-    image: "/images/community-4.jpg",
+    video: "/videos/aggieworks-ditl.mp4",
+    position: "50% 45%",
     title: "AggieWorks",
     description: "",
   },
   {
-    image: "/images/community-1.jpg",
+    image: "/images/about/cookie-rats.jpg",
+    wide: true,
     title: "Cookie rats",
     description: "",
   },
   {
-    image: "/images/community-2.jpg",
+    image: "/images/about/real-rats.jpg",
+    position: "50% 30%",
     title: "Real rats",
     description: "",
+  },
+];
+
+const qa: QAItem[] = [
+  {
+    question: "How did you end up in design?",
+    answer: [
+      "I was drawn to UI/UX before I even knew what it was. My passion started when I was accepted into a website development summer camp during my sophomore year in high school, where I not only discovered that I enjoyed coding, but I especially loved designing websites. When I started college, I was unsure of my future and applied as a chemistry major. However, when I joined Design Interactive’s UI/UX sprint, and everything clicked. I reconnected with my old passion and realized how much I truly loved creating products and spaces that are both functional and visually unique.",
+    ],
+  },
+  {
+    question: "What are your design practices?",
+    answer: [
+      "**Versaility:** \"Home page V1\", \"Home page V2\", \"Home page FINAL\" -- I create many design variations, each building on the last. They capture new ideas and serve as a record (mainly because I'm too sentimental to delete them) to reflect my creative growth.",
+      "**Science based:** I apply concepts learned from my classes about memory and linguistics to design experiences that are cognitive to users.",
+      "**Passion:** Design(eat + sleep + breathe)",
+    ],
+  },
+  {
+    question: "What is your favourite Figma shortcut?",
+    answer: ["You only need to use option ⌥ + hover."],
+  },
+  {
+    question: "5 ants rented an apartment with another 5 ants...",
+    answer: ["now they are tenants!"],
   },
 ];
 
@@ -72,7 +102,7 @@ export default function AboutPage() {
         {/* Right column: intro text */}
         <div className="flex-1 max-w-prose">
           <h2 className="text-3xl font-serif font-medium text-text-primary mb-4">
-            Hello! My name is Katherine!
+            Hello!
           </h2>
           <p className="text-base font-sans text-text-secondary leading-relaxed mb-3">
             {
@@ -80,6 +110,16 @@ export default function AboutPage() {
             }
           </p>
         </div>
+      </motion.div>
+
+      {/* Q&A: questions that open to show the answer */}
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.05 }}
+        className="mb-12"
+      >
+        <QASection items={qa} />
       </motion.div>
 
       {/* Love letter to communities — same 120px side padding as the intro */}

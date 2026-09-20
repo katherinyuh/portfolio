@@ -13,8 +13,8 @@ export function ProjectList({ projects }: { projects: Project[] }) {
   if (view === "Canvas") return <ProjectCanvas projects={projects} />;
 
   return (
-    <div className="px-6 pb-16 pt-8 lg:px-12">
-      <div className="flex flex-col gap-20">
+    <div className="pb-16 pt-4">
+      <div className="flex flex-col">
         <AnimatePresence>
           {projects.map((project, i) => (
             <ProjectCard key={project.id} project={project} index={i} />

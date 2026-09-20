@@ -40,16 +40,9 @@ export default function CaseStudyPage({
         transition={{ duration: 0.45 }}
         className="mb-10"
       >
-        <div className="grid grid-cols-2 gap-8 items-center">
-          <div>
-            <h1 className="text-2xl font-serif font-medium text-text-primary leading-snug">
-              {project.title}
-            </h1>
-          </div>
-          <p className="text-base text-text-muted leading-relaxed">
-            {project.description}
-          </p>
-        </div>
+        <h1 className="text-2xl font-serif font-medium text-text-primary leading-snug">
+          {project.title}
+        </h1>
       </motion.div>
 
       {/* Live site link */}
@@ -152,6 +145,19 @@ export default function CaseStudyPage({
           >
             <PhotoGallery items={block.items} />
           </motion.div>
+        ) : block.type === "closing" ? (
+          // The column width is set on a wrapper: max-w-prose is measured in characters, so on the big
+          // text itself it would come out wider than the page.
+          <div key={i} className="mx-auto mb-12 w-full max-w-prose">
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.15 + i * 0.06 }}
+              className="text-2xl font-serif font-medium leading-snug text-text-primary"
+            >
+              {block.text}
+            </motion.p>
+          </div>
         ) : block.type === "imageFrame" ? (
           <motion.div
             key={i}
