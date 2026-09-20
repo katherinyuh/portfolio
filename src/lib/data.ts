@@ -20,12 +20,24 @@ export type PhotoGalleryItem = {
   wide?: boolean;
 };
 
+/** One card in a CardRow: a bold title with a few short lines under it. */
+export type CardRowItem = {
+  title: string;
+  points: string[];
+  /** A small picture under the title (e.g. an emoji), shown at half its pixel size. */
+  image?: { src: string; alt: string; width: number; height: number };
+  /** Keep the card here but don't show it. */
+  hidden?: boolean;
+};
+
 export type CaseStudyBlock =
   /** `content` paragraphs may use **double asterisks** for bold. A line that is bold from start to end with no full stop (e.g. "**Collaboration**") becomes a small sub-heading for the paragraph after it. */
   | { type: "text"; label?: string; heading?: string; content?: string | string[] }
   | { type: "image"; caption: string }
   | { type: "mediaRow"; items: MediaRowItem[] }
   | { type: "video"; src: string; alt: string; ratio: number }
+  | { type: "imageFrame"; src: string; alt: string; width: number; height: number }
+  | { type: "cards"; items: CardRowItem[] }
   | { type: "photoGallery"; items: PhotoGalleryItem[] }
   | {
       type: "mentalModels";
@@ -34,7 +46,7 @@ export type CaseStudyBlock =
       /** The tools the design drew on (your collage), shown beside the video. */
       reference?: { src: string; alt: string; width: number; height: number };
     }
-  | { type: "beforeAfter"; beforeImage: string; afterImage: string; beforeLabel?: string; afterLabel?: string; caption?: string; beforeRatio?: number; afterRatio?: number; beforeNotes?: BeforeNote[]; beforeNotesPosition?: "right" | "below" };
+  | { type: "beforeAfter"; beforeImage?: string; afterImage?: string; beforeVideo?: string; afterVideo?: string; beforeLabel?: string; afterLabel?: string; caption?: string; beforeRatio?: number; afterRatio?: number; beforeNotes?: BeforeNote[]; beforeNotesPosition?: "right" | "below" };
 export type Project = {
   id: string;
   title: string;
@@ -45,6 +57,8 @@ export type Project = {
   description: string;
   thumbnail: string;
   hero?: string;
+  /** Looping clip shown in place of `hero` on the case study page. `box` is where the clip sits inside the hero frame, as % of the frame (the frame's own colour shows around it). */
+  heroVideo?: { src: string; box: { x: number; y: number; w: number; h: number } };
   /** Short demo clip (in /public/videos) that plays when the project card is hovered. */
   video?: string;
   /** Company logo shown on the project cards instead of the name. `dark` is the dark-theme version; leave it out and the light one is shown as a white silhouette in dark mode. */
@@ -53,6 +67,8 @@ export type Project = {
   thumbnailRatio?: number;
   /** Width / height of the hero image on the case study page. Defaults to thumbnailRatio. */
   heroRatio?: number;
+  /** Shown under the title on the case study page. Defaults to the site role. */
+  role?: string;
   featured?: boolean;
   slug: string;
   caseStudy?: CaseStudyBlock[];
@@ -91,10 +107,11 @@ export const projects: Project[] = [
       "Launching Clubly's events feature to help 35,000+ UC Davis students find events that fit their interests while enabling clubs to grow attendance.",
     thumbnail: "/images/clubly-card-v2.webp",
     hero: "/images/clubly.webp",
+    heroVideo: { src: "/videos/clubly-hero.mp4", box: { x: (164 / 1708) * 100, y: (20 / 840) * 100, w: (1378 / 1708) * 100, h: (798 / 840) * 100 } },
     logo: { light: "/images/logos/clubly-light.svg", dark: "/images/logos/clubly-dark.svg" },
     video: "/videos/clubly-create-event.mp4",
     thumbnailRatio: 2000 / 1160,
-    heroRatio: 2000 / 983,
+    heroRatio: 1708 / 840,
     slug: "clubly",
     liveUrl: "https://clubly.org/events",
     caseStudy: [
@@ -119,7 +136,7 @@ export const projects: Project[] = [
         label: "Solution & Outcomes",
         heading: "Club event creation and exploration on one platform",
         content:
-            "Clubly makes events more discoverable and personalized by aligning with students’ interests, schedules, and social circles. Students find events that matter to them and bring friends along, while clubs see higher turnout and stronger fundraising. We launched the first version of our website, and following our marketing pushes, **200+ events have been posted** and we have **over 15k users**.",
+            "Clubly makes events more discoverable and personalized by aligning with students’ interests, schedules, and social circles. Students find events that matter to them and bring friends along, while clubs see higher turnout and stronger fundraising. We launched the first version of our website in spring 2026, and since then, **200+ events** have been posted and we have **over 15k users**.",
           },
       {
         type: "video",
@@ -216,6 +233,18 @@ export const projects: Project[] = [
       },
       {
         type: "text",
+        label: "Next steps",
+      },
+      {
+        type: "cards",
+        items: [
+          { title: "Immediate", points: ["Implement feedback from usability testing on the student view side"] },
+          { title: "Short-term", points: ["Begin user research for a student dashboard"] },
+          { title: "Long-term", points: ["Begin user research for a student dashboard"], hidden: true },
+        ],
+      },
+      {
+        type: "text",
         label: "Takeaways",
         heading: "Techincal feasibility",
         content:
@@ -241,19 +270,124 @@ export const projects: Project[] = [
   {
     id: "1",
     title: "Industrial analytics dashboard redesign",
-    company: "Laminar Systems",
+    company: "Laminar",
     year: "2025",
     category: "Product",
     tags: ["User Research", "Product Design", "Figma"],
     description:
-      "Streamlining industrial analytics for Laminar Systems' Insights platform to boost adoption and align with facility managers' workflows.",
+      "Streamlining industrial analytics for Laminar's Insights platform to boost adoption and align with facility managers' workflows.",
     thumbnail: "/images/laminar-card-v3.png",
     hero: "/images/laminar.webp",
     logo: { light: "/images/logos/laminar-light.svg", dark: "/images/logos/laminar-dark.svg" },
     thumbnailRatio: 2000 / 1160,
     heroRatio: 2000 / 983,
     featured: true,
+    role: "Product Design Intern",
     slug: "route-optimization",
+    caseStudy: [
+      {
+        type: "text",
+        content: [
+          "**As the team’s official designer, I led the effort by synthesizing user interviews and past customer feedback into a flexible navigation system that aligned with facility managers’ workflows and accommodated diverse user needs.** The project’s goal was to drive higher adoption and customer retention rates.",
+          "During this memorable summer, I was a product design intern at Laminar, a clean-tech startup that uses patented inline sensors and AI to modernize fluid systems in manufacturing. My favorite (hence the case study dedication 🌟) of the four projects I worked on was redesigning the summary page of Insights, a platform where customers view industrial process analytics.",
+        ],
+      },
+      {
+        type: "text",
+        label: "Problem",
+        heading: "Users struggle with Insights’ layout and overwhelming data",
+        content:
+          "Analytics showed that less than 28% of users regularly used Laminar’s Insights dashboard. Despite the platform’s potential, customers weren’t using it consistently. The Summary page in particular was overwhelming: it displayed too much data at once, making it difficult to understand and identify key performance metrics quickly. This discouraged repeat use and limited adoption.",
+      },
+      {
+        type: "text",
+        label: "Outcome",
+        content:
+          "Success will be measured over time by increased adoption, specifically, how often customers return to the Summary page. Because Laminar has a 1-man developer team, shipping new features takes longer, but I kept momentum by documenting through Jira tickets. These have already been triaged and added to the product roadmap, serving as a foundation for the engineering team to build on and ensure that future iterations stay aligned with user needs, making it easier for the team to continue improving the platform.",
+      },
+      {
+        type: "text",
+        label: "Decisions",
+        heading: "How might I design the Summary page so all users can quickly find key data, understand it, and act on it?",
+        content:
+          "I began by interviewing team members who had worked directly with clients to gather recurring feedback, and I reviewed past research to build context around known problems. To validate and deepen these insights, I interviewed with a customer about their current experience and pain points. From there, I began ideating features to improve the Summary page (after rebuilding the Summary page in Figma from scratch):",
+      },
+      {
+        type: "text",
+        heading: "Customizable metric prioritization",
+        content:
+          "Drag-and-drop rows to allow users to quickly customize the order of essential metrics, aligning with familiar spreadsheet mental models and offering a more flexible and personalized experience than alternatives like arrow controls or preset sorting.",
+      },
+      {
+        type: "imageFrame",
+        src: "/images/laminar/summary-hover.svg",
+        alt: "The Summary page with a hovered column header and a drag handle for reordering metrics",
+        width: 1280,
+        height: 832,
+      },
+      {
+        type: "text",
+        heading: "Actionable issue alerts",
+        content:
+          "Added coloured warning icons to flag issues directly in applicable rows with an expandable dropdown that provides context and (in the future) root cause recommendations, shifting Insights from passive reporting to actionable guidance.",
+      },
+      {
+        type: "beforeAfter",
+        beforeImage: "/images/laminar/alerts-original.svg",
+        afterVideo: "/videos/laminar-warning-dropdown.mp4",
+        beforeRatio: 1280 / 832,
+        afterRatio: 1920 / 1240,
+        beforeLabel: "Original version",
+        afterLabel: "Redesign version",
+      },
+      {
+        type: "text",
+        heading: "Making graph data understandable",
+        content:
+          "Currently, sensor data is displayed as a dense chart overlay, but the number of lines makes it overwhelming and difficult to interpret. To address this, I grouped traces by category and organized them into tabs, creating space for explanations of each trace and making the information more digestible",
+      },
+      {
+        type: "beforeAfter",
+        beforeImage: "/images/laminar/graph-original.avif",
+        afterImage: "/images/laminar/graph-redesign.svg",
+        beforeRatio: 1333 / 1476,
+        afterRatio: 850 / 762,
+        beforeLabel: "Original version",
+        afterLabel: "Redesign version",
+      },
+      {
+        type: "text",
+        label: "Takeaways",
+        heading: "Adapt research methods",
+        content:
+          "When I couldn’t connect directly with customers, I learned to pivot by being resourceful: interviewing team members, reviewing past feedback, and creating research questions that followed best practices for my two research groups.",
+      },
+      {
+        type: "text",
+        heading: "Work independently and proactively",
+        content:
+          "As the only design intern, I had to take initiative and communicate consistently. Regular check-ins, open documentation, and sharing my work transparently showed me how much impact clear communication can have.",
+      },
+      {
+        type: "text",
+        heading: "My internship wrapped:",
+      },
+      {
+        type: "cards",
+        items: [
+          {
+            title: "Longest time spent on Figma (my screen time was only on for the last few weeks)",
+            points: ["5 h 22 m on September 3rd"],
+          },
+          { title: "Jokes told", points: ["1 (found on my About page!)"] },
+          {
+            title: "Most used emote",
+            points: [],
+            image: { src: "/images/laminar/emote-thumbs-up.png", alt: "A smiling yellow blob giving a thumbs up", width: 36, height: 36 },
+          },
+        ],
+      },
+    ],
   },
   {
     id: "3",

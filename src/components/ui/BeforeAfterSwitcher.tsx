@@ -27,8 +27,12 @@ function NoteIcon({ kind }: { kind: BeforeNote["icon"] }) {
 }
 
 interface BeforeAfterSwitcherProps {
-  beforeImage: string;
-  afterImage: string;
+  /** Leave an image out until it is added: the beige frame shows on its own. */
+  beforeImage?: string;
+  afterImage?: string;
+  /** A looping video in place of the image. It restarts from the beginning each time that version is shown. */
+  beforeVideo?: string;
+  afterVideo?: string;
   beforeLabel?: string;
   afterLabel?: string;
   caption?: string;
@@ -53,6 +57,8 @@ const slideTransition = { duration: 0.4, ease: [0.22, 1, 0.36, 1] as const };
 export default function BeforeAfterSwitcher({
   beforeImage,
   afterImage,
+  beforeVideo,
+  afterVideo,
   beforeLabel = "Initial version",
   afterLabel = "Current version",
   caption,
@@ -119,13 +125,25 @@ export default function BeforeAfterSwitcher({
                 transition={slideTransition}
                 className="absolute inset-0"
               >
-                <Image
-                  src={afterImage}
-                  alt={afterLabel}
-                  fill
-                  sizes="(min-width: 1024px) 70vw, 100vw"
-                  className="object-contain"
-                />
+                {afterVideo ? (
+                  <video
+                    src={afterVideo}
+                    aria-label={afterLabel}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="absolute inset-0 h-full w-full object-contain"
+                  />
+                ) : afterImage && (
+                  <Image
+                    src={afterImage}
+                    alt={afterLabel}
+                    fill
+                    sizes="(min-width: 1024px) 70vw, 100vw"
+                    className="object-contain"
+                  />
+                  )}
               </motion.div>
             ) : (
               <motion.div
@@ -148,13 +166,25 @@ export default function BeforeAfterSwitcher({
                   }`}
                   style={{ aspectRatio: beforeRatio }}
                 >
-                  <Image
-                    src={beforeImage}
-                    alt={beforeLabel}
-                    fill
-                    sizes="(min-width: 1024px) 70vw, 100vw"
-                    className="object-contain"
-                  />
+                  {beforeVideo ? (
+                    <video
+                      src={beforeVideo}
+                      aria-label={beforeLabel}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="absolute inset-0 h-full w-full object-contain"
+                    />
+                  ) : beforeImage && (
+                    <Image
+                      src={beforeImage}
+                      alt={beforeLabel}
+                      fill
+                      sizes="(min-width: 1024px) 70vw, 100vw"
+                      className="object-contain"
+                    />
+                    )}
                 </div>
 
                 {showNotes && (

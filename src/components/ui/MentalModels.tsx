@@ -15,9 +15,13 @@ export default function MentalModels({
       {/* The design and the tools it drew on, side by side in one container */}
       {(video || reference) && (
         <div className="bg-surface-200 p-6 rounded-none sm:p-10">
-          <div className="flex flex-col items-center gap-8 sm:flex-row sm:justify-center sm:gap-10">
+          {/* Side by side, the two columns are sized in proportion to their shapes, so both come out the same height. */}
+          <div
+            className="grid grid-cols-1 items-start gap-8 sm:gap-10 sm:[grid-template-columns:var(--cols)]"
+            style={{ ["--cols" as string]: `${videoRatio}fr ${reference ? reference.width / reference.height : 0}fr` }}
+          >
             {video && (
-              <figure className="w-full sm:min-w-0 sm:flex-[1.7]">
+              <figure className="w-full min-w-0">
                 <video
                   src={video}
                   aria-label="The Clubly events page: switching between Published and Drafts, with Edit, Registration and Delete on each card"
@@ -31,13 +35,13 @@ export default function MentalModels({
               </figure>
             )}
             {reference && (
-              <figure className="w-full max-w-[280px] sm:min-w-0 sm:flex-1">
+              <figure className="w-full min-w-0 max-sm:mx-auto max-sm:max-w-[280px]">
                 <Image
                   src={reference.src}
                   alt={reference.alt}
                   width={reference.width}
                   height={reference.height}
-                  sizes="(min-width: 640px) 280px, 100vw"
+                  sizes="(min-width: 640px) 40vw, 100vw"
                   className="block h-auto w-full"
                 />
               </figure>

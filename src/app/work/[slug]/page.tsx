@@ -3,9 +3,11 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { projects, siteConfig, type CaseStudyBlock } from "@/lib/data";
+import { projects, type CaseStudyBlock } from "@/lib/data";
 import BeforeAfterSwitcher from "@/components/ui/BeforeAfterSwitcher";
 import PhotoGallery from "@/components/ui/PhotoGallery";
+import ImageFrame from "@/components/ui/ImageFrame";
+import CardRow from "@/components/ui/CardRow";
 import VideoFrame from "@/components/ui/VideoFrame";
 import MediaRow from "@/components/ui/MediaRow";
 import MentalModels from "@/components/ui/MentalModels";
@@ -38,13 +40,11 @@ export default function CaseStudyPage({
         transition={{ duration: 0.45 }}
         className="mb-10"
       >
-        <p className="text-base text-text-muted mb-3">{project.company}</p>
         <div className="grid grid-cols-2 gap-8 items-center">
           <div>
-            <h1 className="text-2xl font-serif font-medium text-text-primary leading-snug mb-1">
+            <h1 className="text-2xl font-serif font-medium text-text-primary leading-snug">
               {project.title}
             </h1>
-            <p className="text-base text-text-muted">{siteConfig.role}, {project.year}</p>
           </div>
           <p className="text-base text-text-muted leading-relaxed">
             {project.description}
@@ -87,7 +87,23 @@ export default function CaseStudyPage({
             : undefined
         }
       >
-        {project.hero ? (
+        {project.heroVideo ? (
+          <video
+            src={project.heroVideo.src}
+            aria-label={project.title}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute block"
+            style={{
+              left: `${project.heroVideo.box.x}%`,
+              top: `${project.heroVideo.box.y}%`,
+              width: `${project.heroVideo.box.w}%`,
+              height: `${project.heroVideo.box.h}%`,
+            }}
+          />
+        ) : project.hero ? (
           <Image
             src={project.hero}
             alt={project.title}
@@ -136,6 +152,21 @@ export default function CaseStudyPage({
           >
             <PhotoGallery items={block.items} />
           </motion.div>
+        ) : block.type === "imageFrame" ? (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.15 + i * 0.06 }}
+            className="mx-auto mb-12 w-full max-w-prose"
+          >
+            <ImageFrame src={block.src} alt={block.alt} width={block.width} height={block.height} />
+          </motion.div>
+        ) : block.type === "cards" ? (
+          // The cards animate themselves when scrolled into view, so this wrapper stays still.
+          <div key={i} className="mx-auto mb-12 w-full max-w-prose">
+            <CardRow items={block.items} />
+          </div>
         ) : block.type === "video" ? (
           <motion.div
             key={i}
@@ -167,6 +198,8 @@ export default function CaseStudyPage({
             <BeforeAfterSwitcher
               beforeImage={block.beforeImage}
               afterImage={block.afterImage}
+              beforeVideo={block.beforeVideo}
+              afterVideo={block.afterVideo}
               beforeLabel={block.beforeLabel}
               afterLabel={block.afterLabel}
               caption={block.caption}
