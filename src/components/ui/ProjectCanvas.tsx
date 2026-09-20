@@ -20,7 +20,7 @@ const BOARD_SCALE = SCROLL_TO_EXPLORE ? 2 : 1;
 // converted to board percentages below; the default view therefore looks the same at any board size.
 const layout = [
   { x: 0.139, y: 0.045, rotate: -5 }, // Clubly: top left
-  { x: 0.024, y: 0.508, rotate: 3 }, // Laminar: bottom left
+  { x: 0.024, y: 0.479, rotate: 3 }, // Laminar: bottom left
   { x: 0.612, y: 0.049, rotate: 3 }, // IBM: top right
   { x: 0.510, y: 0.488, rotate: -2 }, // Delivery Optimizer: bottom right
 ];

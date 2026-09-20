@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import type { BeforeNote } from "@/lib/data";
 
 // Thumbs-up / thumbs-down icons, exactly as supplied (like-m.svg, dislike-m.svg): 24px, filled.
@@ -41,6 +41,15 @@ interface BeforeAfterSwitcherProps {
   beforeNotesPosition?: "right" | "below";
 }
 
+// The two versions slide past each other like the highlight does: the new one comes in from the side
+// you are moving towards while the old one leaves the other way. `dir` is 1 going to Current, -1 back.
+const slide = {
+  enter: (dir: number) => ({ x: dir > 0 ? "100%" : "-100%" }),
+  center: { x: 0 },
+  exit: (dir: number) => ({ x: dir > 0 ? "-100%" : "100%" }),
+};
+const slideTransition = { duration: 0.4, ease: [0.22, 1, 0.36, 1] as const };
+
 export default function BeforeAfterSwitcher({
   beforeImage,
   afterImage,
@@ -53,32 +62,42 @@ export default function BeforeAfterSwitcher({
   beforeNotesPosition = "below",
 }: BeforeAfterSwitcherProps) {
   const [isAfter, setIsAfter] = useState(false);
+  const [dir, setDir] = useState(1);
+  const choose = (after: boolean) => {
+    if (after === isAfter) return;
+    setDir(after ? 1 : -1);
+    setIsAfter(after);
+  };
+  const pillId = useId(); // one sliding highlight per switcher on the page
   const showNotes = !isAfter && !!beforeNotes && beforeNotes.length > 0;
 
-  const IMAGE_STROKE = [`1px 0`, `-1px 0`, `0 1px`, `0 -1px`]
-    .map((offset) => `drop-shadow(${offset} 0 rgb(var(--slate-200)))`)
-    .join(" ");
 
   return (
     <div className="w-full mb-12">
       {/* Content switcher: two touching segments, 32px tall, hugging their labels. The selected one is
-          solid dark with light text; the other is plain muted text. */}
+          solid dark with light text; the other is plain muted text. The dark highlight slides between them. */}
       <div className="mb-6 inline-flex items-stretch" role="group" aria-label="Version">
         {[
-          { label: beforeLabel, selected: !isAfter, select: () => setIsAfter(false) },
-          { label: afterLabel, selected: isAfter, select: () => setIsAfter(true) },
+          { label: beforeLabel, selected: !isAfter, select: () => choose(false) },
+          { label: afterLabel, selected: isAfter, select: () => choose(true) },
         ].map(({ label, selected, select }) => (
           <button
             key={label}
             onClick={select}
             aria-pressed={selected}
-            className={`rounded-none px-2 py-1 text-base transition-colors ${
-              selected
-                ? "bg-slate-950 text-slate-50"
-                : "text-text-muted hover:text-text-primary"
+            className={`relative rounded-none px-2 py-1 text-base transition-colors duration-300 ${
+              selected ? "text-slate-50" : "text-text-muted hover:text-text-primary"
             }`}
           >
-            {label}
+            {selected && (
+              <motion.span
+                layoutId={pillId}
+                aria-hidden
+                className="absolute inset-0 bg-slate-950"
+                transition={{ type: "spring", stiffness: 500, damping: 40 }}
+              />
+            )}
+            <span className="relative">{label}</span>
           </button>
         ))}
       </div>
@@ -86,72 +105,71 @@ export default function BeforeAfterSwitcher({
       {/* Image container. Both versions share one fixed-size box (the Current version's shape), so the
           container never changes size when you switch. The Initial version's description lives inside
           it, 24px from the image: below the image, or beside it on wide screens when asked. */}
-      <div className="p-6 bg-surface-200 border border-surface-300 rounded-none">
-        <div className="relative w-full" style={{ aspectRatio: afterRatio }}>
-          {isAfter ? (
-            <motion.div
-              key="after"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
-              className="absolute inset-0"
-            >
-              <Image
-                src={afterImage}
-                alt={afterLabel}
-                fill
-                sizes="(min-width: 1024px) 70vw, 100vw"
-                className="object-contain"
-                style={{ filter: IMAGE_STROKE }}
-              />
-            </motion.div>
-          ) : (
-            <div
-              className={`absolute inset-0 flex flex-col justify-center gap-6 ${
-                showNotes && beforeNotesPosition === "right"
-                  ? "xl:flex-row xl:items-center"
-                  : ""
-              }`}
-            >
-              {/* The image is sized to its own shape and the image + description are centred as one
-                  group, so the gap between the picture and the text is exactly 24px. */}
+      <div className="p-6 bg-surface-200 rounded-none">
+        <div className="relative w-full overflow-hidden" style={{ aspectRatio: afterRatio }}>
+          <AnimatePresence initial={false} custom={dir}>
+            {isAfter ? (
               <motion.div
-                key="before"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-                className={`relative min-h-0 min-w-0 shrink ${
-                  showNotes && beforeNotesPosition === "right" ? "w-full xl:h-full xl:w-auto" : "w-full"
-                }`}
-                style={{ aspectRatio: beforeRatio }}
+                key="after"
+                custom={dir}
+                variants={slide}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={slideTransition}
+                className="absolute inset-0"
               >
                 <Image
-                  src={beforeImage}
-                  alt={beforeLabel}
+                  src={afterImage}
+                  alt={afterLabel}
                   fill
                   sizes="(min-width: 1024px) 70vw, 100vw"
                   className="object-contain"
-                  style={{ filter: IMAGE_STROKE }}
                 />
               </motion.div>
-
-              {showNotes && (
-                <motion.ul
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                  className="space-y-1 xl:w-max xl:shrink-0 xl:self-start"
+            ) : (
+              <motion.div
+                key="before"
+                custom={dir}
+                variants={slide}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={slideTransition}
+                className={`absolute inset-0 flex flex-col justify-center gap-6 ${
+                  showNotes && beforeNotesPosition === "right" ? "xl:flex-row xl:items-center" : ""
+                }`}
+              >
+                {/* The image is sized to its own shape and the image + description are centred as one
+                    group, so the gap between the picture and the text is exactly 24px. */}
+                <div
+                  className={`relative min-h-0 min-w-0 shrink ${
+                    showNotes && beforeNotesPosition === "right" ? "w-full xl:h-full xl:w-auto" : "w-full"
+                  }`}
+                  style={{ aspectRatio: beforeRatio }}
                 >
-                  {beforeNotes.map((note) => (
-                    <li key={note.text} className="flex items-start gap-2 text-base text-text-muted">
-                      <NoteIcon kind={note.icon} />
-                      <span>{note.text}</span>
-                    </li>
-                  ))}
-                </motion.ul>
-              )}
-            </div>
-          )}
+                  <Image
+                    src={beforeImage}
+                    alt={beforeLabel}
+                    fill
+                    sizes="(min-width: 1024px) 70vw, 100vw"
+                    className="object-contain"
+                  />
+                </div>
+
+                {showNotes && (
+                  <ul className="space-y-1 xl:w-max xl:shrink-0 xl:self-start">
+                    {beforeNotes.map((note) => (
+                      <li key={note.text} className="flex items-start gap-2 text-base text-text-muted">
+                        <NoteIcon kind={note.icon} />
+                        <span>{note.text}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 

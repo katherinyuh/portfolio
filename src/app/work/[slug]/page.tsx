@@ -5,11 +5,10 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { projects, siteConfig, type CaseStudyBlock } from "@/lib/data";
 import BeforeAfterSwitcher from "@/components/ui/BeforeAfterSwitcher";
-
-const STROKE = "rgb(var(--slate-200))"; // light hairline; follows the light / dark theme
-const IMAGE_STROKE = [`1px 0`, `-1px 0`, `0 1px`, `0 -1px`]
-  .map((offset) => `drop-shadow(${offset} 0 ${STROKE})`)
-  .join(" ");
+import PhotoGallery from "@/components/ui/PhotoGallery";
+import VideoFrame from "@/components/ui/VideoFrame";
+import MediaRow from "@/components/ui/MediaRow";
+import MentalModels from "@/components/ui/MentalModels";
 
 const fallbackCaseStudy: CaseStudyBlock[] = [
   { type: "text", label: "Overview", content: "What was the problem? Who were you designing for?" },
@@ -80,7 +79,7 @@ export default function CaseStudyPage({
         className={
           project.hero
             ? "relative mb-12 w-full bg-surface-200"
-            : "relative w-full aspect-video bg-surface-200 border border-surface-300 mb-12 flex items-center justify-center overflow-hidden"
+            : "relative w-full aspect-video bg-surface-200 mb-12 flex items-center justify-center overflow-hidden"
         }
         style={
           project.hero
@@ -95,8 +94,6 @@ export default function CaseStudyPage({
             fill
             sizes="(min-width: 1024px) 70vw, 100vw"
             className="object-contain"
-            // 1px light stroke that follows the visible image, not the transparent margin around it
-            style={{ filter: IMAGE_STROKE }}
           />
         ) : (
           <p className="text-xs text-text-muted">Add your hero image here</p>
@@ -111,9 +108,53 @@ export default function CaseStudyPage({
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.15 + i * 0.06 }}
-            className="w-full aspect-video bg-surface-200 border border-surface-300 mb-12 flex items-center justify-center"
+            className="w-full aspect-video bg-surface-200 mb-12 flex items-center justify-center"
           >
             <p className="text-xs text-text-muted">{block.caption}</p>
+          </motion.div>
+        ) : block.type === "mentalModels" ? (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.15 + i * 0.06 }}
+            className="mb-12 w-full"
+          >
+            <MentalModels
+              video={block.video}
+              videoRatio={block.videoRatio}
+              reference={block.reference}
+            />
+          </motion.div>
+        ) : block.type === "photoGallery" ? (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.15 + i * 0.06 }}
+            className="mx-auto mb-12 w-full max-w-prose"
+          >
+            <PhotoGallery items={block.items} />
+          </motion.div>
+        ) : block.type === "video" ? (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.15 + i * 0.06 }}
+            className="mb-12 w-full"
+          >
+            <VideoFrame src={block.src} alt={block.alt} ratio={block.ratio} />
+          </motion.div>
+        ) : block.type === "mediaRow" ? (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.15 + i * 0.06 }}
+            className="mb-12 w-full"
+          >
+            <MediaRow items={block.items} />
           </motion.div>
         ) : block.type === "beforeAfter" ? (
           <motion.div
@@ -157,14 +198,32 @@ export default function CaseStudyPage({
                 {block.heading}
               </h3>
             )}
-            {(Array.isArray(block.content) ? block.content : block.content ? [block.content] : []).map((paragraph, j) => (
-              <p
-                key={j}
-                className={`text-base text-text-muted ${project.caseStudy ? "" : "italic"} ${j > 0 ? "mt-3" : ""}`}
-              >
-                {paragraph}
-              </p>
-            ))}
+            {(Array.isArray(block.content) ? block.content : block.content ? [block.content] : []).map((paragraph, j) => {
+              // A short line that is bold from start to end, with no full stop, is a sub-heading for the paragraph
+              // after it. (A bold sentence that ends in a full stop is just a bold paragraph.)
+              const subheading = (t: string) => /^\*\*[^*]+\*\*$/.test(t) && !/[.!?]\*\*$/.test(t);
+              const isSubheading = subheading(paragraph);
+              return isSubheading ? (
+                <h4 key={j} className={`text-base font-medium text-text-primary ${j > 0 ? "mt-3" : ""}`}>
+                  {paragraph.slice(2, -2)}
+                </h4>
+              ) : (
+                <p
+                  key={j}
+                  className={`text-base text-text-muted ${project.caseStudy ? "" : "italic"} ${j > 0 ? "mt-3" : ""}`}
+                >
+                  {paragraph.split("**").map((part, k) =>
+                    k % 2 === 1 ? (
+                      <strong key={k} className="font-semibold">
+                        {part}
+                      </strong>
+                    ) : (
+                      part
+                    )
+                  )}
+                </p>
+              );
+            })}
           </motion.section>
         )
       )}
