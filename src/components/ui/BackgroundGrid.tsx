@@ -32,6 +32,20 @@ const gridItems = [
   { image: "/images/grid/diamondhead.JPG", caption: "diamond head" },
   { image: "/images/grid/Po’aibyPonoPotions.JPG", caption: "po’ai by pono potions" },
   { image: "/images/grid/earlybirdcoffee.JPG", caption: "early bird coffee" },
+  { image: "/images/grid/centralpark.jpg", caption: "central park" },
+  { image: "/images/grid/kokocrater.jpg", caption: "koko crater" },
+  { image: "/images/grid/flowers.jpg", caption: "flowers" },
+  { image: "/images/grid/heavenlyskisummer.jpg", caption: "heavenly in the summer" },
+  { image: "/images/grid/DIbanquet2025.jpg", caption: "di banquet 2025" },
+  { image: "/images/grid/givingup.jpg", caption: "giving up" },
+  { image: "/images/grid/pineappledessert.jpg", caption: "pineapple dessert" },
+  { image: "/images/grid/hotdog.jpg", caption: "hot dogs" },
+  { image: "/images/grid/frozenyogurt.jpg", caption: "frozen yogurt" },
+  { image: "/images/grid/mounttam.jpg", caption: "mount tam" },
+  { image: "/images/grid/keshi.jpg", caption: "keshi" },
+  { image: "/images/grid/preobhm.jpg", caption: "pre-race" },
+  { image: "/images/grid/DIboard2025.jpg", caption: "di board 2025" },
+  { image: "/images/grid/seattle.jpg", caption: "seattle" },
 ];
 
 const COLS = 28;

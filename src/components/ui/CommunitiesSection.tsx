@@ -17,6 +17,8 @@ interface Community {
   position?: string;
   /** A wider polaroid, for landscape photos: it takes two columns instead of one. */
   wide?: boolean;
+  /** A least width in px, for a narrow window whose title needs more room than its column gives it. It grows into the gaps either side. */
+  minWidth?: number;
   title: string;
   description: string;
 }
@@ -46,6 +48,7 @@ export default function CommunitiesSection({ items }: CommunitiesSectionProps) {
   const [shown, setShown] = useState(false); // the polaroids are on the page (they stay while closing)
   const busy = useRef(false);
   const art = useRef<HTMLDivElement>(null);
+  const section = useRef<HTMLDivElement>(null);
   const figs = useRef<(HTMLElement | null)[]>([]);
 
   const peekPhotos = items.filter((it) => it.image).slice(0, PEEK.length);
@@ -60,12 +63,26 @@ export default function CommunitiesSection({ items }: CommunitiesSectionProps) {
     });
   };
 
+  // The polaroids make the section much taller, so scroll to bring them into view instead of leaving that to the visitor:
+  // all of it if it fits on the screen, otherwise from its heading down.
+  const revealSection = () => {
+    const el = section.current;
+    if (!el) return;
+    const top = el.getBoundingClientRect().top;
+    const height = el.offsetHeight;
+    const HEADER = 48 + 16; // the sticky top bar, plus some air
+    const avail = window.innerHeight - HEADER - 24;
+    const delta = height <= avail ? top + height - (window.innerHeight - 24) : top - HEADER;
+    if (delta > 0) window.scrollBy({ top: delta, behavior: reduce ? "auto" : "smooth" });
+  };
+
   useLayoutEffect(() => {
     if (!shown) return;
     const list = figs.current.filter(Boolean) as HTMLElement[];
     const off = offsets();
 
     if (open) {
+      revealSection();
       busy.current = true;
       const runs = list.map((el, i) =>
         reduce
@@ -103,21 +120,22 @@ export default function CommunitiesSection({ items }: CommunitiesSectionProps) {
   };
 
   return (
-    <div>
+    <div ref={section}>
       <h2 className="text-xl font-serif font-medium text-text-primary mb-1">
         My work-life balance 😎
       </h2>
       <p className="text-base font-sans text-text-muted mb-8">Here are things I love</p>
 
       {/* The folder is the first cell; the polaroids fill the rest, to its right and below. Tall ones take
-          one column, wide ones two, and every photo in a row is the same height. */}
-      <div className="grid grid-flow-dense grid-cols-2 gap-x-6 gap-y-10 px-2 py-2 lg:grid-flow-row lg:grid-cols-5">
+          one column, wide ones two, and every photo in a row is the same height. Dense flow lets a later tall window
+          fill a gap that a wide one leaves. */}
+      <div className="grid grid-flow-dense grid-cols-2 gap-x-6 gap-y-10 px-2 py-2 lg:grid-cols-5">
         <button
           type="button"
           onClick={toggle}
           aria-expanded={open}
           aria-label="Photo folder"
-          className="col-span-2 flex flex-col items-center gap-3 self-start lg:col-span-1"
+          className="group col-span-2 flex flex-col items-center gap-3 self-start lg:col-span-1"
         >
           <div ref={art} className="relative h-[120px] w-[160px] [perspective:600px]">
             {/* Back panel, with its tab */}
@@ -127,8 +145,8 @@ export default function CommunitiesSection({ items }: CommunitiesSectionProps) {
               <div
                 key={i}
                 aria-hidden
-                className={`absolute top-1 h-[54px] w-[42px] bg-surface-50 p-[3px] transition-opacity duration-300 ${
-                  open ? "opacity-0" : "opacity-100"
+                className={`absolute top-1 h-[54px] w-[42px] bg-surface-50 p-[3px] transition-[opacity,translate] duration-300 ${
+                  open ? "opacity-0" : "opacity-100 group-hover:[translate:0_-7px]"
                 }`}
                 style={{ left: p.left, transform: `rotate(${p.rotate}deg)` }}
               >
@@ -139,10 +157,10 @@ export default function CommunitiesSection({ items }: CommunitiesSectionProps) {
                 </div>
               </div>
             ))}
-            {/* Front panel: tips forward a little when open */}
+            {/* Front panel: tips forward a little on hover, and further when open */}
             <div
               className={`absolute inset-x-0 bottom-0 top-[30%] origin-bottom bg-gradient-to-br from-surface-100 to-surface-300 transition-transform duration-300 ${
-                open ? "[transform:rotateX(-24deg)]" : "[transform:rotateX(0deg)]"
+                open ? "[transform:rotateX(-24deg)]" : "[transform:rotateX(0deg)] group-hover:[transform:rotateX(-12deg)]"
               }`}
             />
           </div>
@@ -160,10 +178,11 @@ export default function CommunitiesSection({ items }: CommunitiesSectionProps) {
                 }}
                 className={`relative flex flex-col bg-surface-50 rounded-none [rotate:var(--tilt)] transition-[rotate] duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:z-10 hover:[rotate:var(--tilt-hover)] ${
                   item.wide ? "col-span-2" : ""
-                }`}
+                } ${item.minWidth ? "justify-self-center" : ""}`}
                 // starts hidden: the fly-out animation brings it in from the folder
                 style={{
                   opacity: 0,
+                  minWidth: item.minWidth,
                   ["--tilt" as string]: `${tilt}deg`,
                   ["--tilt-hover" as string]: `${tilt > 0 ? tilt - 4 : tilt + 4}deg`,
                 }}

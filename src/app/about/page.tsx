@@ -8,19 +8,20 @@ import QASection, { type QAItem } from "@/components/ui/QASection";
 
 const communities = [
   {
-    // Photo to come
+    image: "/images/about/my-dog.jpeg",
     title: "My dog!!!",
     description: "",
   },
   {
     image: "/images/about/half-marathon.jpg",
-    title: "Dying in a half marathon",
+    minWidth: 176, // wide enough for the title in the window's title bar
+    title: "Running (sort of)",
     description: "",
   },
   {
-    image: "/images/about/design-interactive.jpg",
+    image: "/images/about/cookie-rats.jpg",
     wide: true,
-    title: "Design Interactive (Fall 2025)",
+    title: "Cookie rats",
     description: "",
   },
   {
@@ -30,9 +31,14 @@ const communities = [
     description: "",
   },
   {
-    image: "/images/about/cookie-rats.jpg",
+    image: "/images/about/hawaii.jpg",
+    title: "HAWAII",
+    description: "",
+  },
+  {
+    image: "/images/about/design-interactive.jpg",
     wide: true,
-    title: "Cookie rats",
+    title: "Design Interactive (Fall 2025)",
     description: "",
   },
   {
