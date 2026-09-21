@@ -164,7 +164,7 @@ export function PinnedBoard() {
         </Pin>
 
         {/* to-do note: one piece of art, with the binder clip and the list */}
-        <Pin label="To-do list" x={230} y={90} w={129.4} h={183.3} z={5}>
+        <Pin label="To-do list" x={228} y={90} w={129.4} h={183.3} z={5}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/images/board/to-do-list.svg"
@@ -176,18 +176,18 @@ export function PinnedBoard() {
 
         {/* keychain: the green card holder with the real rats photo behind its window, a star hooked through the top, and a chain
             that hangs from the star's ring and swings when you point at it */}
-        <Pin label="Keychain" x={366.4} y={28} w={73.2} h={136.6} rotate={1} z={3}>
-          <div className="absolute inset-x-0 bottom-0 top-[20.5%]">
+        <Pin label="Keychain" x={364} y={20} w={86.1} h={160.6} rotate={1} z={3}>
+          <div className="absolute inset-x-0 bottom-0 top-[20.5%]" style={{ transform: "translateY(-4px)" }}>
             {/* the photo shows through the window in the holder */}
             <div className="absolute left-[15.3%] top-[11.7%] h-[78.5%] w-[69.6%] overflow-hidden">
               <Photo src="/images/about/real-rats.jpg" alt="Real rats" position="50% 30%" sizes="10vw" />
             </div>
             <Art name="green-card-holder" className="inset-0 h-full w-full" />
           </div>
-          <Art name="keychain-top" className="left-[31.1%] top-0 w-[37.8%]" />
+          <Art name="keychain-top" className="left-[31.1%] top-0 w-[32.1%]" />
           <motion.div
             className="absolute"
-            style={{ left: "calc(22.7% - 20px)", top: "calc(23.2% - 8px)", width: "57.9%", transformOrigin: "47% 2%", rotate: 8 }}
+            style={{ left: "calc(22.7% - 20px)", top: "calc(23.2% - 8px)", width: "49.2%", transformOrigin: "47% 2%", rotate: 8 }}
             whileHover={{ rotate: [-14, 9, -25, 1, -20, -9, -14], transition: { duration: 1.7, ease: "easeInOut" } }}
             transition={{ duration: 0.45, ease: "easeOut" }}
           >
@@ -212,13 +212,28 @@ export function PinnedBoard() {
         </Pin>
 
         {/* hamburger cat */}
-        <Pin label="Hamburger cat" x={378} y={189} w={61} h={59} rotate={-4} z={4}>
+        <Pin label="Hamburger cat" x={378} y={198} w={61} h={59} rotate={-4} z={4}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/images/board/hamburger-cat.png" alt="A cat sticker shaped like a hamburger" draggable={false} className="h-full w-full select-none object-contain" />
         </Pin>
 
         {/* Banter: tips to the left when you point at him */}
-        <Pin label="Banter" x={221.5} y={270} w={65} h={75} rotate={-2} z={6} hover={{ rotate: -16, scale: 1.06 }}>
+        <Pin
+          label="Banter"
+          x={221.5}
+          y={270}
+          w={65}
+          h={75}
+          rotate={-2}
+          z={6}
+          hover={{ rotate: -16, scale: 1.06 }}
+          style={{
+            left: `calc(${cq(221.5)} - 8px)`,
+            top: `calc(${cq(270)} - 8px)`,
+            width: `calc(${cq(65)} + 16px)`,
+            height: `calc(${cq(75)} + 16px)`,
+          }}
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/images/board/banter-sticker.svg" alt="Banter, my dog" draggable={false} className="h-full w-full select-none object-contain" />
         </Pin>
@@ -247,12 +262,8 @@ export function PinnedBoard() {
             }}
           />
         </Pin>
-        <Pin label="Hawaii photo" x={470} y={270} w={44} h={56} rotate={-6} z={7}>
-          <div className="relative h-full w-full bg-surface-50 p-[7%]">
-            <div className="relative h-full w-full overflow-hidden">
-              <Photo src="/images/about/Hawaii.svg?v=2" alt="Hawaii" sizes="8vw" unoptimized />
-            </div>
-          </div>
+        <Pin label="Hawaii photo" x={468.9} y={269.9} w={46.2} h={56.2} z={7}>
+          <Art name="hawaii-polaroid" alt="Hawaii" className="inset-0 h-full w-full" />
         </Pin>
         <Pin label="Sun" x={605} y={265} w={70} h={70} z={7} flat>
           <Art name="sun" alt="A gold sun pin" className="inset-0 w-full" />
