@@ -7,16 +7,25 @@ import { motion } from "framer-motion";
 import { navLinks, siteConfig } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
-// When the site was last built, in the visitor's own time zone with AM or PM. The time zone is only known in the
-// browser, so it is filled in after the page loads.
+// When the site was last built, in the visitor's own time zone. The time zone is only known in the browser, so it is
+// filled in after the page loads.
 const BUILT_AT = process.env.NEXT_PUBLIC_BUILD_TIME;
 const formatLocal = (iso: string) =>
-  new Intl.DateTimeFormat("en-US", {
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: true,
-  }).format(new Date(iso));
+  (() => {
+    const date = new Date(iso);
+    const datePart = new Intl.DateTimeFormat("en-US", {
+      month: "2-digit",
+      day: "2-digit",
+      year: "2-digit",
+    }).format(date);
+    const timePart = new Intl.DateTimeFormat("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
+    }).format(date);
+    return `${datePart} @ ${timePart}`;
+  })();
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -75,7 +84,7 @@ export function Sidebar() {
 
       {/* Pinned to the bottom of the sidebar */}
       {lastUpdated && (
-        <p className="mt-auto px-6 pb-8 text-sm text-text-muted lg:px-8">Last updated: {lastUpdated}</p>
+        <p className="mt-auto px-6 pb-8 text-sm text-text-muted lg:px-8">Last update: {lastUpdated}</p>
       )}
     </aside>
   );

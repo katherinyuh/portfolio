@@ -6,49 +6,6 @@ import { motion } from "framer-motion";
 import CommunitiesSection from "@/components/ui/CommunitiesSection";
 import QASection, { type QAItem } from "@/components/ui/QASection";
 
-const communities = [
-  {
-    image: "/images/about/my-dog.jpeg",
-    title: "My dog!!!",
-    description: "",
-  },
-  {
-    image: "/images/about/half-marathon.jpg",
-    minWidth: 176, // wide enough for the title in the window's title bar
-    title: "Running (sort of)",
-    description: "",
-  },
-  {
-    image: "/images/about/cookie-rats.jpg",
-    wide: true,
-    title: "Cookie rats",
-    description: "",
-  },
-  {
-    video: "/videos/aggieworks-ditl.mp4",
-    position: "50% 45%",
-    title: "AggieWorks",
-    description: "",
-  },
-  {
-    image: "/images/about/hawaii.jpg",
-    title: "HAWAII",
-    description: "",
-  },
-  {
-    image: "/images/about/design-interactive.jpg",
-    wide: true,
-    title: "Design Interactive (Fall 2025)",
-    description: "",
-  },
-  {
-    image: "/images/about/real-rats.jpg",
-    position: "50% 30%",
-    title: "Real rats",
-    description: "",
-  },
-];
-
 const qa: QAItem[] = [
   {
     question: "How did you end up in design?",
@@ -135,7 +92,7 @@ export default function AboutPage() {
         transition={{ duration: 0.5, delay: 0.1 }}
         className="mb-14 md:mb-24"
       >
-        <CommunitiesSection items={communities} />
+        <CommunitiesSection />
       </motion.div>
 
     </div>

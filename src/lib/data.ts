@@ -111,7 +111,7 @@ export const navLinks = [
 export const socials = [
   { label: "LinkedIn", href: "https://linkedin.com/in/katherinyuh" },
   { label: "Clubly", href: "https://clubly.org" },
-  { label: "Email", href: "mailto:katherinyuh@ucdavis.edu" },
+  { label: "Email", href: "mailto:katherineliu2005@gmail.com" },
 ];
 
 export const projects: Project[] = [
