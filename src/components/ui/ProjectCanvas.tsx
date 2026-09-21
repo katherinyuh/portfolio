@@ -67,7 +67,7 @@ export function ProjectCanvas({ projects }: { projects: Project[] }) {
 
   return (
     // `isolate` keeps the cards' and the hint's z-indexes inside the canvas, so the intro screen covers them all
-    <div className="relative isolate h-[70vh] min-h-[520px] overflow-hidden lg:h-[calc(100vh-3rem)]">
+    <div className="relative isolate h-[70vh] min-h-[32.5rem] overflow-hidden lg:h-[calc(100vh-3rem)]">
       {/* With scrolling on, wheel / trackpad / touch / arrow keys move around the board; no scrollbars */}
       <div
         ref={scrollerRef}
@@ -125,8 +125,8 @@ export function ProjectCanvas({ projects }: { projects: Project[] }) {
                   data-cursor-label={project.comingSoon ? "Coming soon" : "View"}
                   className="group absolute cursor-grab bg-surface-50 p-2 shadow-md dark:border dark:border-slate-200"
                   style={{
-                    width: `min(${width}px, calc(100% - 32px))`,
-                    left: `max(16px, min(${boardPercent(slot.x)}%, calc(100% - ${width + 16}px)))`,
+                    width: `min(${width}px, calc(100% - 2rem))`,
+                    left: `max(1rem, min(${boardPercent(slot.x)}%, calc(100% - ${width}px - 1rem)))`,
                     top: `${boardPercent(slot.y)}%`,
                     zIndex: zIndex[project.id] ?? 0,
                   }}

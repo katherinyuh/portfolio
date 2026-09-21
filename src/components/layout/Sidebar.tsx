@@ -26,7 +26,7 @@ export function Sidebar() {
   }, []);
 
   return (
-    <aside className="z-40 flex flex-col border-b border-slate-200 lg:fixed lg:inset-y-0 lg:left-0 lg:w-[320px] lg:border-b-0 lg:border-r">
+    <aside className="z-40 flex flex-col border-b border-slate-200 lg:fixed lg:inset-y-0 lg:left-0 lg:w-80 lg:border-b-0 lg:border-r">
       {/* Header */}
       <div className="shrink-0 px-6 pt-8 lg:px-8">
         <Link href="/" className="text-base font-medium text-text-primary">

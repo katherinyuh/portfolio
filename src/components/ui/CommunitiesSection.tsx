@@ -121,10 +121,10 @@ export default function CommunitiesSection({ items }: CommunitiesSectionProps) {
 
   return (
     <div ref={section}>
-      <h2 className="text-xl font-serif font-medium text-text-primary mb-1">
+      <h2 className="text-xl font-serif font-medium text-text-primary mb-2">
         My work-life balance 😎
       </h2>
-      <p className="text-base font-sans text-text-muted mb-8">Here are things I love</p>
+      <p className="text-base font-sans text-text-muted mb-5 md:mb-8">Here are things I love</p>
 
       {/* The folder is the first cell; the polaroids fill the rest, to its right and below. Tall ones take
           one column, wide ones two, and every photo in a row is the same height. Dense flow lets a later tall window

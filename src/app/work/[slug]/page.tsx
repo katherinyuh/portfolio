@@ -20,6 +20,20 @@ const fallbackCaseStudy: CaseStudyBlock[] = [
   { type: "text", label: "Outcomes", content: "What changed? Metrics, feedback, learnings…" },
 ];
 
+// Spacing between the parts of a case study, all in rem, mobile first and larger on desktop (md and up):
+//   text ↔ pictures   1.25rem → 2rem
+//   between sections  3.5rem  → 6rem   (a section starts at a text block with a label)
+//   a big headline to a button, 1rem → 1.5rem; the button to the picture below it is the text-to-picture gap
+const GAP_TEXT_MEDIA = "mb-5 md:mb-8";
+const GAP_SECTION = "mb-14 md:mb-24";
+
+// The gap under a block, from what comes next.
+function gapAfter(block: CaseStudyBlock, next?: CaseStudyBlock) {
+  if (!next) return GAP_SECTION; // the end of the page
+  if (next.type === "text" && next.label) return GAP_SECTION; // a new section
+  return GAP_TEXT_MEDIA; // text and pictures (or pictures and pictures) within a section
+}
+
 // This would normally fetch from a CMS or MDX files
 // For now it shows a structured template per project
 export default function CaseStudyPage({
@@ -38,7 +52,7 @@ export default function CaseStudyPage({
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45 }}
-        className="mb-10"
+        className={project.liveUrl ? "mb-4 md:mb-6" : GAP_TEXT_MEDIA}
       >
         <h1 className="text-2xl font-serif font-medium text-text-primary leading-snug">
           {project.title}
@@ -51,7 +65,7 @@ export default function CaseStudyPage({
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.05 }}
-          className="mb-6"
+          className={GAP_TEXT_MEDIA}
         >
           <a
             href={project.liveUrl}
@@ -71,8 +85,8 @@ export default function CaseStudyPage({
         transition={{ duration: 0.5, delay: 0.1 }}
         className={
           project.hero
-            ? "relative mb-12 w-full bg-surface-200"
-            : "relative w-full aspect-video bg-surface-200 mb-12 flex items-center justify-center overflow-hidden"
+            ? `relative ${GAP_TEXT_MEDIA} w-full bg-surface-200`
+            : `relative w-full aspect-video bg-surface-200 ${GAP_TEXT_MEDIA} flex items-center justify-center overflow-hidden`
         }
         style={
           project.hero
@@ -110,14 +124,15 @@ export default function CaseStudyPage({
       </motion.div>
 
       {/* Case study sections */}
-      {(project.caseStudy ?? fallbackCaseStudy).map((block, i) =>
-        block.type === "image" ? (
+      {(project.caseStudy ?? fallbackCaseStudy).map((block, i, blocks) => {
+        const gap = gapAfter(block, blocks[i + 1]);
+        return block.type === "image" ? (
           <motion.div
             key={i}
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.15 + i * 0.06 }}
-            className="w-full aspect-video bg-surface-200 mb-12 flex items-center justify-center"
+            className={`w-full aspect-video bg-surface-200 ${gap} flex items-center justify-center`}
           >
             <p className="text-xs text-text-muted">{block.caption}</p>
           </motion.div>
@@ -127,7 +142,7 @@ export default function CaseStudyPage({
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.15 + i * 0.06 }}
-            className="mb-12 w-full"
+            className={`${gap} w-full`}
           >
             <MentalModels
               video={block.video}
@@ -141,14 +156,14 @@ export default function CaseStudyPage({
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.15 + i * 0.06 }}
-            className="mx-auto mb-12 w-full max-w-prose"
+            className={`mx-auto ${gap} w-full max-w-prose`}
           >
             <PhotoGallery items={block.items} />
           </motion.div>
         ) : block.type === "closing" ? (
           // The column width is set on a wrapper: max-w-prose is measured in characters, so on the big
           // text itself it would come out wider than the page.
-          <div key={i} className="mx-auto mb-12 w-full max-w-prose">
+          <div key={i} className={`mx-auto ${gap} w-full max-w-prose`}>
             <motion.p
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -164,13 +179,13 @@ export default function CaseStudyPage({
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.15 + i * 0.06 }}
-            className="mx-auto mb-12 w-full max-w-prose"
+            className={`mx-auto ${gap} w-full max-w-prose`}
           >
             <ImageFrame src={block.src} alt={block.alt} width={block.width} height={block.height} />
           </motion.div>
         ) : block.type === "cards" ? (
           // The cards animate themselves when scrolled into view, so this wrapper stays still.
-          <div key={i} className="mx-auto mb-12 w-full max-w-prose">
+          <div key={i} className={`mx-auto ${gap} w-full max-w-prose`}>
             <CardRow items={block.items} />
           </div>
         ) : block.type === "video" ? (
@@ -179,7 +194,7 @@ export default function CaseStudyPage({
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.15 + i * 0.06 }}
-            className="mb-12 w-full"
+            className={`${gap} w-full`}
           >
             <VideoFrame src={block.src} alt={block.alt} ratio={block.ratio} />
           </motion.div>
@@ -189,7 +204,7 @@ export default function CaseStudyPage({
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.15 + i * 0.06 }}
-            className="mb-12 w-full"
+            className={`${gap} w-full`}
           >
             <MediaRow items={block.items} />
           </motion.div>
@@ -199,7 +214,7 @@ export default function CaseStudyPage({
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.15 + i * 0.06 }}
-            className="mx-auto mb-12 max-w-prose w-full"
+            className={`mx-auto ${gap} max-w-prose w-full`}
           >
             <BeforeAfterSwitcher
               beforeImage={block.beforeImage}
@@ -221,7 +236,7 @@ export default function CaseStudyPage({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.15 + i * 0.06 }}
-            className={`mx-auto max-w-prose ${block.content ? "mb-12" : "mb-6"}`}
+            className={`mx-auto max-w-prose ${gap}`}
           >
             {block.label && (
               <p className="text-xs font-sans text-text-muted uppercase tracking-wider mb-4">
@@ -264,8 +279,8 @@ export default function CaseStudyPage({
               );
             })}
           </motion.section>
-        )
-      )}
+        );
+      })}
     </div>
   );
 }

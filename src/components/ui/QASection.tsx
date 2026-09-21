@@ -35,7 +35,7 @@ export default function QASection({ items }: { items: QAItem[] }) {
 
   return (
     <div>
-      <h2 className="mb-6 text-xl font-serif font-medium text-text-primary">Q&amp;A</h2>
+      <h2 className="mb-4 text-xl font-serif font-medium text-text-primary">Q&amp;A</h2>
       <div className="space-y-2">
         {items.map((item, i) => {
           const isOpen = !!open[i];

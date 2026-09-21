@@ -78,16 +78,16 @@ export default function AboutPage() {
   const [imageError, setImageError] = useState(false);
 
   return (
-    <div className="bg-slate-50 px-[120px] pt-10">
+    <div className="bg-slate-50 px-[7.5rem] pt-10">
       {/* Intro */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex flex-col md:flex-row items-center justify-center gap-12 mb-12"
+        className="flex flex-col md:flex-row items-center justify-center gap-12 mb-14 md:mb-24"
       >
         {/* Left column: photo */}
-        <div className="w-full md:w-[280px] shrink-0">
+        <div className="w-full md:w-[17.5rem] shrink-0">
           <div className="relative aspect-[3/4] w-full overflow-hidden bg-surface-200">
             {imageError ? (
               <div className="absolute inset-0 flex items-center justify-center text-sm text-text-muted">
@@ -107,7 +107,7 @@ export default function AboutPage() {
 
         {/* Right column: intro text */}
         <div className="flex-1 max-w-prose">
-          <h2 className="text-3xl font-serif font-medium text-text-primary mb-4">
+          <h2 className="text-3xl font-serif font-medium text-text-primary mb-6">
             Hello!
           </h2>
           <p className="text-base font-sans text-text-secondary leading-relaxed mb-3">
@@ -123,17 +123,17 @@ export default function AboutPage() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.05 }}
-        className="mb-12"
+        className="mb-14 md:mb-24"
       >
         <QASection items={qa} />
       </motion.div>
 
-      {/* Love letter to communities — same 120px side padding as the intro */}
+      {/* Love letter to communities — same 7.5rem (120px) side padding as the intro */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="mb-12"
+        className="mb-14 md:mb-24"
       >
         <CommunitiesSection items={communities} />
       </motion.div>

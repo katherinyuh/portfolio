@@ -64,7 +64,7 @@ function Strip({ project }: { project: Project }) {
   return (
     <div
       ref={scroller}
-      className={`flex h-[180px] gap-2 overflow-x-auto overscroll-x-contain [scrollbar-width:none] sm:h-[240px] [&::-webkit-scrollbar]:hidden ${
+      className={`flex h-[11.25rem] gap-2 overflow-x-auto overscroll-x-contain [scrollbar-width:none] sm:h-60 [&::-webkit-scrollbar]:hidden ${
         soon ? "" : grabbing ? "cursor-grabbing" : "cursor-grab"
       }`}
       onPointerDown={(e) => {

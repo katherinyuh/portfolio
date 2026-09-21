@@ -444,6 +444,7 @@ export const projects: Project[] = [
     thumbnail: "/images/ibm-card-v2.png",
     gallery: [
       { src: "/images/ibm-card-v2.png", ratio: 2000 / 1160 },
+      { src: "/images/ibm/intern-photo.webp", alt: "Katherine standing beside the IBM logo on the wall", ratio: 2000 / 1160 },
     ],
     hero: "/images/ibm.webp",
     logo: { light: "/images/logos/ibm-light.svg", dark: "/images/logos/ibm-dark.svg" },
@@ -462,11 +463,11 @@ export const projects: Project[] = [
     tags: ["Branding", "Web Design", "Accessibility"],
     description:
       "Building an open-source route-planning tool to help small businesses eliminate manual, hours-long delivery planning.",
-    thumbnail: "/images/benevolent-bandwidth.webp",
-    gallery: [{ src: "/images/benevolent-bandwidth.webp", ratio: 2000 / 1160 }],
+    thumbnail: "/images/benevolent-bandwidth-card.svg",
+    gallery: [{ src: "/images/benevolent-bandwidth-card.svg", ratio: 1440 / 835 }],
     hero: "/images/benevolent-bandwidth.webp",
     logo: { light: "/images/logos/benevolent-bandwidth.png" },
-    thumbnailRatio: 2000 / 1160,
+    thumbnailRatio: 1440 / 835,
     heroRatio: 2000 / 983,
     comingSoon: true,
     slug: "benevolent-bandwidth",

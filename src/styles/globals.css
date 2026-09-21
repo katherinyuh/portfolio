@@ -4,7 +4,18 @@
 
 @layer base {
   :root {
-    --sidebar-width: 240px;
+    /* ---- Spacing: the 4px/8px grid, in rem so the page rhythm follows the root font size and doesn't depend on the
+       text sizes inside components. Tailwind's own spacing scale (p-6, gap-8, mb-12 …) is the same grid, 1 unit = 0.25rem. ---- */
+    --spacing-4: 0.25rem; /* 4px */
+    --spacing-8: 0.5rem; /* 8px */
+    --spacing-12: 0.75rem; /* 12px */
+    --spacing-16: 1rem; /* 16px, the base */
+    --spacing-24: 1.5rem; /* 24px */
+    --spacing-32: 2rem; /* 32px */
+    --spacing-48: 3rem; /* 48px */
+    --spacing-64: 4rem; /* 64px */
+
+    --sidebar-width: 20rem; /* 320px */
 
     /* ---- Theme colours (RGB channels). Light is the default; dark follows the system setting. ---- */
     color-scheme: light dark;
@@ -105,7 +116,7 @@
 
 @layer components {
   .nav-link {
-    @apply flex items-center gap-3 h-[24px] rounded-none text-base text-text-secondary
+    @apply flex items-center gap-3 h-6 rounded-none text-base text-text-secondary
            transition-all duration-200 relative
            hover:text-red-700;
   }
