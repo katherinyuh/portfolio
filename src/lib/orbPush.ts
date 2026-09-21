@@ -11,7 +11,7 @@ export interface Pointer {
 }
 
 /** How far past an orb's edge the pointer still reaches it, in px. */
-export const PUSH_REACH = 34;
+export const PUSH_REACH = 100;
 
 /**
  * Gives the orbs a shove where the pointer has just moved through them: away from it, and the way it was going, harder
@@ -27,7 +27,7 @@ export function pushOrbs(body: typeof Matter.Body, orbs: Matter.Body[], radius: 
   const mx = dx / speed;
   const my = dy / speed;
   const reach = radius + PUSH_REACH;
-  const strength = Math.min(speed, 45) * 0.16;
+  const strength = Math.min(speed, 45) * 0.2;
 
   for (const orb of orbs) {
     const ox = orb.position.x - pointer.x;
