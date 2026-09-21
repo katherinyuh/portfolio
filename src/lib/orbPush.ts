@@ -11,7 +11,7 @@ export interface Pointer {
 }
 
 /** How far past an orb's edge the pointer still reaches it, in px. */
-export const PUSH_REACH = 100;
+export const PUSH_REACH = 88;
 
 /**
  * Gives the orbs a shove where the pointer has just moved through them: away from it, and the way it was going, harder

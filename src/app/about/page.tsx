@@ -35,7 +35,7 @@ export default function AboutPage() {
   const [imageError, setImageError] = useState(false);
 
   return (
-    <div className="bg-slate-50 px-[7.5rem] pt-10">
+    <div className="mb-16 bg-slate-50 px-[7.5rem] pt-10">
       {/* Intro */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}

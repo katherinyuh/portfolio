@@ -2,13 +2,8 @@
 
 import { createContext, useContext, useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import Image from "next/image";
-import localFont from "next/font/local";
 import { motion, useMotionValue, type TargetAndTransition } from "framer-motion";
 import { DiscPlayer } from "./DiscPlayer";
-
-// Handwriting for the little labels (the polaroid caption, the photo strip, the sticky note): the one place, with the
-// captions on the photos, where the site doesn't use Geist.
-const schoolbell = localFont({ src: "../../../fonts/Schoolbell-Regular.ttf", display: "swap" });
 
 // Everything is laid out on a board 733 wide and 366 tall, and every size and position is turned into a share of the
 // board's width, so the whole thing scales with the page.
@@ -89,10 +84,6 @@ function Photo({ src, alt, position, sizes = "20vw", unoptimized = false }: { sr
   return <Image src={src} alt={alt} fill sizes={sizes} unoptimized={unoptimized} draggable={false} className="select-none object-cover" style={{ objectPosition: position }} />;
 }
 
-// The polaroid's paper: cream with tiny red hearts, in a staggered grid (a repeating tile, sized as a share of the card).
-const HEARTS_PAPER =
-  "url(\"data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 54 38%22%3E%3Cg transform=%22translate%2834 15%29%22%3E%3Cpath d=%22M2 3.8 C0.2 2.4 0 1.4 0 0.9 C0 0.3 0.5 0 1 0 C1.4 0 1.8 0.3 2 0.7 C2.2 0.3 2.6 0 3 0 C3.5 0 4 0.3 4 0.9 C4 1.4 3.8 2.4 2 3.8Z%22 fill=%22%23D9384A%22/%3E%3C/g%3E%3Cg transform=%22translate%286 -2%29%22%3E%3Cpath d=%22M2 3.8 C0.2 2.4 0 1.4 0 0.9 C0 0.3 0.5 0 1 0 C1.4 0 1.8 0.3 2 0.7 C2.2 0.3 2.6 0 3 0 C3.5 0 4 0.3 4 0.9 C4 1.4 3.8 2.4 2 3.8Z%22 fill=%22%23D9384A%22/%3E%3C/g%3E%3Cg transform=%22translate%286 36%29%22%3E%3Cpath d=%22M2 3.8 C0.2 2.4 0 1.4 0 0.9 C0 0.3 0.5 0 1 0 C1.4 0 1.8 0.3 2 0.7 C2.2 0.3 2.6 0 3 0 C3.5 0 4 0.3 4 0.9 C4 1.4 3.8 2.4 2 3.8Z%22 fill=%22%23D9384A%22/%3E%3C/g%3E%3C/svg%3E\") 0 0 / 49% 25% repeat, #f7eadb";
-
 // The small pieces of art, drawn in Figma and exported as SVG (in public/images/board). Each fills the width of the
 // box it is put in and keeps its own shape.
 function Art({ name, alt = "", className = "", style }: { name: string; alt?: string; className?: string; style?: CSSProperties }) {
@@ -125,42 +116,19 @@ export function PinnedBoard() {
     >
     <div className="overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <div ref={board} className="relative w-full min-w-[42rem] [container-type:inline-size]" style={{ aspectRatio: `${BOARD_W} / ${BOARD_H}` }}>
-        {/* polaroid: the half marathon, on hearts paper with a beige pin over its top edge */}
-        <Pin label="Polaroid" x={28} y={40} w={83.6} h={116.6} rotate={-1} z={2}>
-          <div className="relative h-full w-full" style={{ background: HEARTS_PAPER }}>
-            <div className="absolute left-[3.5%] top-[2.9%] h-[68.5%] w-[91.3%] overflow-hidden bg-surface-200">
-              <Photo src="/images/about/half-marathon.jpg" alt="Running the Bay Bridge Half" position="50% 55%" />
-            </div>
-            <p
-              className={`${schoolbell.className} absolute inset-x-0 bottom-[6%] text-center leading-none text-text-primary`}
-              style={{ fontSize: cq(11.5) }}
-            >
-              Bay Bridge Half
-            </p>
-            <Art name="beige-pin" className="left-[19.5%] top-[-28%] w-[30.4%]" />
-          </div>
+        {/* polaroid: the half marathon, one piece of art with the hearts paper, photo, caption and beige pin */}
+        <Pin label="Polaroid" x={26.4} y={8.5} w={87} h={154.8} rotate={-1} z={2} flat>
+          <Art name="half-marathon-polaroid" alt="Bay Bridge Half: running the Bay Bridge half marathon" className="inset-0 h-full w-full" />
         </Pin>
 
-        {/* photo strip: communities. A black strip tilted a little to the left, three photos, a silver pin and a label. */}
-        <Pin label="Photo strip" x={136} y={24} w={82} h={214.8} rotate={4} z={3}>
-          <div className="relative h-full w-full bg-[#1f1f1f]">
-            {[
-              { src: "/images/about/design-interactive.jpg", alt: "Design Interactive", top: "1%" },
-              { src: "/images/board/aw-dabbing.jpg", alt: "The AggieWorks team dabbing", top: "29.7%" },
-              { src: "/images/board/aw-spring-2026.jpg", alt: "The AggieWorks team, spring 2026", top: "58.4%" },
-            ].map((photo) => (
-              <div key={photo.src} className="absolute left-[4.1%] h-[25.9%] w-[91.8%] overflow-hidden bg-[#2b2b2b]" style={{ top: photo.top }}>
-                <Photo src={photo.src} alt={photo.alt} sizes="14vw" />
-              </div>
-            ))}
-            <p
-              className={`${schoolbell.className} absolute inset-x-0 bottom-[3.6%] text-center leading-none text-surface-50`}
-              style={{ fontSize: cq(11) }}
-            >
-              Communities
-            </p>
-            <Art name="silver-pin" className="left-[31%] top-[-4.3%] z-10 w-[23.2%]" />
-          </div>
+        {/* photo strip: communities. One piece of art, a tilted black strip with three photos, a silver pin and a label. */}
+        <Pin label="Photo strip" x={125.4} y={14.7} w={103.2} h={233.3} z={3} flat>
+          <Art name="photo-strip" alt="A photo strip of my communities: Design Interactive and the AggieWorks team" className="inset-0 h-full w-full" />
+        </Pin>
+
+        {/* Tetris logo, in the gap above the to-do note */}
+        <Pin label="Tetris logo" x={243} y={12} w={104} h={72.2} rotate={-3} z={4}>
+          <Art name="tetris-logo" alt="The Tetris logo" className="inset-0 h-full w-full" />
         </Pin>
 
         {/* to-do note: one piece of art, with the binder clip and the list */}
