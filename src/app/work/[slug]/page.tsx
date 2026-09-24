@@ -11,6 +11,8 @@ import CardRow from "@/components/ui/CardRow";
 import VideoFrame from "@/components/ui/VideoFrame";
 import MediaRow from "@/components/ui/MediaRow";
 import MentalModels from "@/components/ui/MentalModels";
+import { LightboxProvider, useLightbox } from "@/components/ui/MediaLightbox";
+import CountUpNumber from "@/components/ui/CountUpNumber";
 
 const fallbackCaseStudy: CaseStudyBlock[] = [
   { type: "text", label: "Overview", content: "What was the problem? Who were you designing for?" },
@@ -41,12 +43,24 @@ export default function CaseStudyPage({
 }: {
   params: { slug: string };
 }) {
+  return (
+    <LightboxProvider>
+      <CaseStudyContent params={params} />
+    </LightboxProvider>
+  );
+}
+
+// Click any picture or video in the case study and it pops out over the page, life-size; click the dimmed
+// background (or press Escape) to close it again. Split out from the page so it can call useLightbox(), which
+// only works inside the LightboxProvider above.
+function CaseStudyContent({ params }: { params: { slug: string } }) {
   const project = projects.find((p) => p.slug === params.slug);
+  const openLightbox = useLightbox();
 
   if (!project) notFound();
 
   return (
-    <div className="px-16 py-10 w-full">
+    <div className="w-full px-4 py-10 md:px-16">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
@@ -102,7 +116,8 @@ export default function CaseStudyPage({
             loop
             muted
             playsInline
-            className="absolute block"
+            onClick={() => openLightbox({ type: "video", src: project.heroVideo!.src, alt: project.title })}
+            className="absolute block cursor-zoom-in"
             style={{
               left: `${project.heroVideo.box.x}%`,
               top: `${project.heroVideo.box.y}%`,
@@ -116,7 +131,8 @@ export default function CaseStudyPage({
             alt={project.title}
             fill
             sizes="(min-width: 1024px) 70vw, 100vw"
-            className="object-contain"
+            onClick={() => openLightbox({ type: "image", src: project.hero!, alt: project.title })}
+            className="object-contain cursor-zoom-in"
           />
         ) : (
           <p className="text-xs text-text-muted">Add your hero image here</p>
@@ -194,9 +210,9 @@ export default function CaseStudyPage({
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.15 + i * 0.06 }}
-            className={`${gap} w-full`}
+            className={block.width === "prose" ? `mx-auto ${gap} w-full max-w-prose` : `${gap} w-full`}
           >
-            <VideoFrame src={block.src} alt={block.alt} ratio={block.ratio} />
+            <VideoFrame src={block.src} alt={block.alt} ratio={block.ratio} tightY={block.tightY} />
           </motion.div>
         ) : block.type === "mediaRow" ? (
           <motion.div
@@ -204,9 +220,9 @@ export default function CaseStudyPage({
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.15 + i * 0.06 }}
-            className={`${gap} w-full`}
+            className={block.width === "prose" ? `mx-auto ${gap} w-full max-w-prose` : `${gap} w-full`}
           >
-            <MediaRow items={block.items} />
+            <MediaRow items={block.items} stacked={block.stacked} tightY={block.tightY} />
           </motion.div>
         ) : block.type === "beforeAfter" ? (
           <motion.div
@@ -257,9 +273,10 @@ export default function CaseStudyPage({
               // after it. (A bold sentence that ends in a full stop is just a bold paragraph.)
               const subheading = (t: string) => /^\*\*[^*]+\*\*$/.test(t) && !/[.!?]\*\*$/.test(t);
               const isSubheading = subheading(paragraph);
+              const heading = paragraph.slice(2, -2);
               return isSubheading ? (
                 <h4 key={j} className={`text-base font-medium text-text-primary ${j > 0 ? "mt-3" : ""}`}>
-                  {paragraph.slice(2, -2)}
+                  {/\d/.test(heading) ? <CountUpNumber text={heading} /> : heading}
                 </h4>
               ) : (
                 <p
@@ -269,7 +286,7 @@ export default function CaseStudyPage({
                   {paragraph.split("**").map((part, k) =>
                     k % 2 === 1 ? (
                       <strong key={k} className="font-semibold dark:text-text-primary">
-                        {part}
+                        {/\d/.test(part) ? <CountUpNumber text={part} /> : part}
                       </strong>
                     ) : (
                       part

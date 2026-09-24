@@ -35,9 +35,10 @@ export default function AboutPage() {
   const [imageError, setImageError] = useState(false);
 
   return (
-    <div className="mb-16 bg-slate-50 px-[7.5rem] pt-10">
-      {/* Intro */}
-      <motion.div
+    <div className="bg-slate-50 pb-16 pt-10">
+      <div className="px-6 lg:px-[7.5rem]">
+        {/* Intro */}
+        <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -73,27 +74,27 @@ export default function AboutPage() {
             }
           </p>
         </div>
-      </motion.div>
+        </motion.div>
 
-      {/* Q&A: questions that open to show the answer */}
-      <motion.div
+        {/* Q&A: questions that open to show the answer */}
+        <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.05 }}
         className="mb-14 md:mb-24"
       >
         <QASection items={qa} />
-      </motion.div>
+        </motion.div>
 
-      {/* Love letter to communities — same 7.5rem (120px) side padding as the intro */}
-      <motion.div
+        {/* Love letter to communities — same 7.5rem (120px) side padding as the intro */}
+        <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="mb-14 md:mb-24"
       >
         <CommunitiesSection />
-      </motion.div>
+        </motion.div>
+      </div>
 
     </div>
   );

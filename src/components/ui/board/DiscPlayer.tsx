@@ -35,8 +35,17 @@ export function DiscPlayer({ src, alt, playing }: { src: string; alt: string; pl
           aria-hidden
           className="absolute inset-0"
           style={{
+            background: "repeating-radial-gradient(circle at 50% 50%, rgb(0 0 0 / 0) 0 4.4px, rgb(0 0 0 / 0.2) 4.4px 5px, rgb(0 0 0 / 0) 5px 7.6px)",
+            maskImage: "radial-gradient(circle at 50% 50%, black 0 50%, transparent 50%)",
+            WebkitMaskImage: "radial-gradient(circle at 50% 50%, black 0 50%, transparent 50%)",
+          }}
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0"
+          style={{
             background:
-              "repeating-radial-gradient(circle at 50% 50%, rgb(0 0 0 / 0) 0 5px, rgb(0 0 0 / 0.1) 5px 5.6px), conic-gradient(from 20deg, rgb(255 255 255 / 0) 0deg, rgb(255 255 255 / 0.22) 40deg, rgb(255 255 255 / 0) 90deg, rgb(255 255 255 / 0) 180deg, rgb(255 255 255 / 0.16) 220deg, rgb(255 255 255 / 0) 270deg)",
+              "conic-gradient(from 20deg, rgb(255 255 255 / 0) 0deg, rgb(255 255 255 / 0.22) 40deg, rgb(255 255 255 / 0) 90deg, rgb(255 255 255 / 0) 180deg, rgb(255 255 255 / 0.16) 220deg, rgb(255 255 255 / 0) 270deg)",
           }}
         />
       </motion.div>

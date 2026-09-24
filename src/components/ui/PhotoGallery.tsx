@@ -5,16 +5,19 @@ import { createPortal } from "react-dom";
 import Image from "next/image";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import type { PhotoGalleryItem } from "@/lib/data";
+import { useLightbox } from "@/components/ui/MediaLightbox";
 
 /**
- * One photo. With a mouse, hovering tilts the photo slightly and the pointer turns into its caption,
- * which follows the mouse. Without one (touch, keyboard), tapping or focusing tilts it and pins the caption.
+ * One photo. With a mouse, hovering tilts the photo slightly and the pointer turns into its caption, which
+ * follows the mouse. Without one (touch, keyboard), focusing tilts it and pins the caption. Click (or tap) it
+ * and it pops out life-size.
  */
 function GalleryTile({ item, tilt }: { item: PhotoGalleryItem; tilt: number }) {
   const [hovered, setHovered] = useState(false); // mouse is over the photo
-  const [pinned, setPinned] = useState(false); // tapped or focused
+  const [pinned, setPinned] = useState(false); // focused by keyboard
   const [mounted, setMounted] = useState(false); // the caption portal only exists in the browser
   useEffect(() => setMounted(true), []);
+  const openLightbox = useLightbox();
 
   // The caption trails the mouse a little, so it feels attached rather than glued on.
   const x = useMotionValue(0);
@@ -40,7 +43,7 @@ function GalleryTile({ item, tilt }: { item: PhotoGalleryItem; tilt: number }) {
         }}
         onPointerMove={(e) => e.pointerType === "mouse" && move(e)}
         onPointerLeave={(e) => e.pointerType === "mouse" && setHovered(false)}
-        onClick={(e) => e.detail === 0 || setPinned((p) => !p)}
+        onClick={() => item.src && openLightbox({ type: "image", src: item.src, alt: item.alt })}
         onFocus={() => setPinned(true)}
         onBlur={() => setPinned(false)}
         aria-label={item.caption}

@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useRef, useState, type CSSPropert
 import Image from "next/image";
 import { motion, useMotionValue, type TargetAndTransition } from "framer-motion";
 import { DiscPlayer } from "./DiscPlayer";
+import { PhotoFolder } from "./PhotoFolder";
 
 // Everything is laid out on a board 733 wide and 366 tall, and every size and position is turned into a share of the
 // board's width, so the whole thing scales with the page.
@@ -34,8 +35,13 @@ interface PinProps {
   /** Words that replace the mouse circle while it is over this piece. */
   cursor?: string;
   onTap?: () => void;
+  onHoverStart?: () => void;
+  onHoverEnd?: () => void;
+  externalHover?: boolean;
+  animate?: TargetAndTransition;
   /** No shadow around the shape (for things that are already see-through or have their own). */
   flat?: boolean;
+  proportional?: boolean;
   className?: string;
   style?: CSSProperties;
   /** What it does when the mouse is over it, instead of the usual small lift. */
@@ -46,7 +52,7 @@ interface PinProps {
  * One thing on the board. You can pick it up and drag it about; let go and it springs back to where it was pinned,
  * like the pieces on pinned-board.framer.website.
  */
-function Pin({ label, x, y, w, h, rotate = 0, z = 1, children, cursor, onTap, flat, className = "", style, hover }: PinProps) {
+function Pin({ label, x, y, w, h, rotate = 0, z = 1, children, cursor, onTap, onHoverStart, onHoverEnd, externalHover = false, animate: animateTarget, flat, proportional = false, className = "", style, hover }: PinProps) {
   // With a mouse you can pick pieces up. On a touch screen they stay put, so a finger on the board scrolls it instead.
   const [mouse, setMouse] = useState(false);
   useEffect(() => setMouse(window.matchMedia("(pointer: fine)").matches), []);
@@ -57,7 +63,7 @@ function Pin({ label, x, y, w, h, rotate = 0, z = 1, children, cursor, onTap, fl
   return (
     <motion.div
       className={`absolute select-none ${mouse ? "cursor-grab touch-none" : ""} ${className}`}
-      style={{ left: cq(x), top: cq(y), width: cq(w), height: cq(h), zIndex: z, rotate, x: dragX, y: dragY, filter: flat ? undefined : SHADOW, ...style }}
+      style={{ left: cq(x), top: cq(y), width: cq(w), height: proportional ? "auto" : cq(h), aspectRatio: proportional ? `${w} / ${h}` : undefined, zIndex: z, rotate, x: dragX, y: dragY, filter: flat ? undefined : SHADOW, ...style }}
       drag={mouse}
       dragSnapToOrigin={!layout.active}
       dragMomentum={!layout.active}
@@ -67,6 +73,9 @@ function Pin({ label, x, y, w, h, rotate = 0, z = 1, children, cursor, onTap, fl
       transition={{ type: "spring", stiffness: 240, damping: 22 }}
       whileDrag={{ scale: 1.07, zIndex: 60, cursor: "grabbing" }}
       onTap={onTap}
+      onHoverStart={onHoverStart}
+      onHoverEnd={onHoverEnd}
+      animate={externalHover ? hover : animateTarget}
       onDragEnd={() => {
         if (!layout.active || !label) return;
         const unit = BOARD_W / layout.boardPx(); // board units for each pixel on the screen
@@ -101,6 +110,8 @@ function Art({ name, alt = "", className = "", style }: { name: string; alt?: st
  */
 export function PinnedBoard() {
   const [playing, setPlaying] = useState(false);
+  const [nameTagHovered, setNameTagHovered] = useState(false);
+  const [fortuneOpen, setFortuneOpen] = useState(false);
   const board = useRef<HTMLDivElement>(null);
   const [layoutMode, setLayoutMode] = useState(false);
   const [moved, setMoved] = useState<Record<string, { x: number; y: number }>>({});
@@ -114,25 +125,25 @@ export function PinnedBoard() {
         report: (label, x, y) => setMoved((m) => ({ ...m, [label]: { x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10 } })),
       }}
     >
-    <div className="overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <div className="-mb-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <div ref={board} className="relative w-full min-w-[42rem] [container-type:inline-size]" style={{ aspectRatio: `${BOARD_W} / ${BOARD_H}` }}>
         {/* polaroid: the half marathon, one piece of art with the hearts paper, photo, caption and beige pin */}
-        <Pin label="Polaroid" x={26.4} y={8.5} w={87} h={154.8} rotate={-1} z={2} flat>
+        <Pin label="Polaroid" x={26.4} y={8.5} w={87} h={154.8} rotate={-1} z={2} flat proportional>
           <Art name="half-marathon-polaroid" alt="Bay Bridge Half: running the Bay Bridge half marathon" className="inset-0 h-full w-full" />
         </Pin>
 
         {/* photo strip: communities. One piece of art, a tilted black strip with three photos, a silver pin and a label. */}
-        <Pin label="Photo strip" x={125.4} y={14.7} w={103.2} h={233.3} z={3} flat>
+        <Pin label="Photo strip" x={120} y={10} w={103.2} h={233.3} z={3} flat proportional>
           <Art name="photo-strip" alt="A photo strip of my communities: Design Interactive and the AggieWorks team" className="inset-0 h-full w-full" />
         </Pin>
 
         {/* Tetris logo, in the gap above the to-do note */}
-        <Pin label="Tetris logo" x={243} y={12} w={104} h={72.2} rotate={-3} z={4}>
+        <Pin label="Tetris logo" x={230} y={16} w={104} h={72.2} rotate={-3} z={4} proportional>
           <Art name="tetris-logo" alt="The Tetris logo" className="inset-0 h-full w-full" />
         </Pin>
 
         {/* to-do note: one piece of art, with the binder clip and the list */}
-        <Pin label="To-do list" x={228} y={90} w={129.4} h={183.3} z={5}>
+        <Pin label="To-do list" x={228} y={90} w={129.4} h={183.3} z={5} proportional>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/images/board/to-do-list.svg"
@@ -144,7 +155,7 @@ export function PinnedBoard() {
 
         {/* keychain: the green card holder with the real rats photo behind its window, a star hooked through the top, and a chain
             that hangs from the star's ring and swings when you point at it */}
-        <Pin label="Keychain" x={364} y={20} w={86.1} h={160.6} rotate={1} z={3}>
+        <Pin label="Keychain" x={364} y={20} w={86.1} h={160.6} rotate={1} z={3} proportional>
           <div className="absolute inset-x-0 bottom-0 top-[20.5%]" style={{ transform: "translateY(-4px)" }}>
             {/* the photo shows through the window in the holder */}
             <div className="absolute left-[15.3%] top-[11.7%] h-[78.5%] w-[69.6%] overflow-hidden">
@@ -165,24 +176,59 @@ export function PinnedBoard() {
         </Pin>
 
         {/* the record player: tap it to play */}
-        <Pin label="Record" x={455} y={32} w={115} h={115} z={2} cursor={playing ? "Pause" : "Play"} onTap={() => setPlaying((p) => !p)} flat className="[&>div]:drop-shadow-[0_5px_8px_rgb(0_0_0/0.25)]">
-          <DiscPlayer src="/images/board/sweet-boy.jpg" alt="Sweet Boy" playing={playing} />
+        <Pin label="Record" x={455} y={28} w={115} h={115} z={2} cursor={playing ? "Pause" : "Play"} onTap={() => setPlaying((p) => !p)} flat proportional className="[&>div]:drop-shadow-[0_5px_8px_rgb(0_0_0/0.25)]" style={{ top: `calc(${cq(32)} - 4px)` }}>
+          <DiscPlayer src="/images/board/noahkahan.webp" alt="Noah Kahan" playing={playing} />
         </Pin>
 
         {/* blossom sticker */}
-        <Pin label="Flower" x={603} y={12} w={52.4} h={56.2} rotate={8} z={2}>
-          <Art name="flower" alt="A pink flower" className="inset-0 w-full" />
+        <Pin
+          label={fortuneOpen ? "Fortune open" : "Fortune closed"}
+          x={590}
+          y={12}
+          w={52.4}
+          h={56.2}
+          rotate={8}
+          z={2}
+          proportional
+          onTap={() => setFortuneOpen((open) => !open)}
+          animate={{ scale: fortuneOpen ? 1 : 1 }}
+        >
+          <Art
+            name={fortuneOpen ? "openfortune" : "fortuneclosed"}
+            alt={fortuneOpen ? "An open fortune flower" : "A closed fortune flower"}
+            className="inset-0 w-full"
+          />
+        </Pin>
+        <Pin label="Orchid" x={656} y={10} w={58} h={57} rotate={-6} z={2} flat proportional>
+          <Art name="Orchid" alt="An orchid" className="inset-0 h-full w-full" />
         </Pin>
 
         {/* name tag */}
-        <Pin label="Name tag" x={585} y={71} w={131} h={74.7} rotate={1} z={3} flat>
+        <Pin
+          label="Name tag"
+          x={585}
+          y={71}
+          w={131}
+          h={74.7}
+          rotate={1}
+          z={3}
+          flat
+          proportional
+          onHoverStart={() => setNameTagHovered(true)}
+          onHoverEnd={() => setNameTagHovered(false)}
+        >
           <Art name="name-tag" alt="A name tag that says I love my dog" className="inset-0 w-full" />
         </Pin>
 
         {/* hamburger cat */}
-        <Pin label="Hamburger cat" x={378} y={198} w={61} h={59} rotate={-4} z={4}>
+        <Pin label="Hamburger cat" x={378} y={198} w={61} h={59} rotate={-4} z={4} proportional>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/images/board/hamburger-cat.png" alt="A cat sticker shaped like a hamburger" draggable={false} className="h-full w-full select-none object-contain" />
+        </Pin>
+
+        {/* photo folder, below the cat: point at it and the photos slide out */}
+        <Pin label="Photo folder" x={330} y={283} w={80} h={(80 * 231) / 348} z={8} flat proportional hover={{ scale: 1 }}>
+          <PhotoFolder scale={80 / 348} />
         </Pin>
 
         {/* Banter: tips to the left when you point at him */}
@@ -195,6 +241,8 @@ export function PinnedBoard() {
           rotate={-2}
           z={6}
           hover={{ rotate: -16, scale: 1.06 }}
+          externalHover={nameTagHovered}
+          proportional
           style={{
             left: `calc(${cq(221.5)} - 8px)`,
             top: `calc(${cq(270)} - 8px)`,
@@ -230,17 +278,17 @@ export function PinnedBoard() {
             }}
           />
         </Pin>
-        <Pin label="Hawaii photo" x={468.9} y={269.9} w={46.2} h={56.2} z={7}>
+        <Pin label="Hawaii photo" x={468.9} y={269.9} w={46.2} h={56.2} z={7} proportional>
           <Art name="hawaii-polaroid" alt="Hawaii" className="inset-0 h-full w-full" />
         </Pin>
-        <Pin label="Sun" x={605} y={265} w={70} h={70} z={7} flat>
+        <Pin label="Sun" x={605} y={265} w={70} h={70} z={7} flat proportional>
           <Art name="sun" alt="A gold sun pin" className="inset-0 w-full" />
         </Pin>
 
         {/* cookies, with a clip */}
-        <Pin label="Cookies" x={18} y={203} w={184} h={138} rotate={-1} z={2}>
+        <Pin label="Cookies" x={18} y={203} w={184} h={138} rotate={-1} z={2} proportional>
           <div className="relative h-full w-full overflow-visible">
-            <Photo src="/images/about/cookie-rats.jpg" alt="Cookies shaped like rats" sizes="26vw" />
+            <Photo src="/images/about/cookie-rats.png" alt="Cookies shaped like rats" sizes="26vw" />
             <Art name="silver-pin-long" className="left-[32.2%] top-[-19.3%] w-[12.1%]" />
           </div>
         </Pin>

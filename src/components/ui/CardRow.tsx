@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import type { CardRowItem } from "@/lib/data";
+import { useLightbox } from "@/components/ui/MediaLightbox";
 
 // Each card rests at its own slight angle, so the row looks laid out by hand rather than on a grid.
 const TILTS = [0.8, -1.2, 0.6];
@@ -17,6 +18,7 @@ export default function CardRow({ items: allItems }: { items: CardRowItem[] }) {
   const items = allItems.filter((item) => !item.hidden); // hidden cards are skipped, and the rest share the row
   const reduce = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
+  const openLightbox = useLightbox();
   const halfVisible = useInView(ref, { amount: 0.5 });
   const anyVisible = useInView(ref, { amount: 0 });
   const [shown, setShown] = useState(false);
@@ -66,7 +68,8 @@ export default function CardRow({ items: allItems }: { items: CardRowItem[] }) {
                 alt={item.image.alt}
                 width={item.image.width}
                 height={item.image.height}
-                className="mt-2 block"
+                onClick={() => openLightbox({ type: "image", src: item.image!.src, alt: item.image!.alt })}
+                className="mt-2 block cursor-zoom-in"
                 style={{ width: item.image.width / 2, height: item.image.height / 2 }}
               />
             )}

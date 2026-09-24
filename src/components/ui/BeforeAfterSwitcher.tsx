@@ -4,6 +4,7 @@ import { useId, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import type { BeforeNote } from "@/lib/data";
+import { useLightbox } from "@/components/ui/MediaLightbox";
 
 // Thumbs-up / thumbs-down icons, exactly as supplied (like-m.svg, dislike-m.svg): 24px, filled.
 const NOTE_ICON = {
@@ -76,6 +77,17 @@ export default function BeforeAfterSwitcher({
   };
   const pillId = useId(); // one sliding highlight per switcher on the page
   const showNotes = !isAfter && !!beforeNotes && beforeNotes.length > 0;
+  const openLightbox = useLightbox();
+  // Whichever version is showing right now: click the picture and that's what pops out.
+  const openCurrent = () => {
+    if (isAfter) {
+      if (afterVideo) openLightbox({ type: "video", src: afterVideo, alt: afterLabel });
+      else if (afterImage) openLightbox({ type: "image", src: afterImage, alt: afterLabel });
+    } else {
+      if (beforeVideo) openLightbox({ type: "video", src: beforeVideo, alt: beforeLabel });
+      else if (beforeImage) openLightbox({ type: "image", src: beforeImage, alt: beforeLabel });
+    }
+  };
 
 
   return (
@@ -133,7 +145,8 @@ export default function BeforeAfterSwitcher({
                     loop
                     muted
                     playsInline
-                    className="absolute inset-0 h-full w-full object-contain"
+                    onClick={openCurrent}
+                    className="absolute inset-0 h-full w-full cursor-zoom-in object-contain"
                   />
                 ) : afterImage && (
                   <Image
@@ -141,7 +154,8 @@ export default function BeforeAfterSwitcher({
                     alt={afterLabel}
                     fill
                     sizes="(min-width: 1024px) 70vw, 100vw"
-                    className="object-contain"
+                    onClick={openCurrent}
+                    className="cursor-zoom-in object-contain"
                   />
                   )}
               </motion.div>
@@ -174,7 +188,8 @@ export default function BeforeAfterSwitcher({
                       loop
                       muted
                       playsInline
-                      className="absolute inset-0 h-full w-full object-contain"
+                      onClick={openCurrent}
+                      className="absolute inset-0 h-full w-full cursor-zoom-in object-contain"
                     />
                   ) : beforeImage && (
                     <Image
@@ -182,7 +197,8 @@ export default function BeforeAfterSwitcher({
                       alt={beforeLabel}
                       fill
                       sizes="(min-width: 1024px) 70vw, 100vw"
-                      className="object-contain"
+                      onClick={openCurrent}
+                      className="cursor-zoom-in object-contain"
                     />
                     )}
                 </div>

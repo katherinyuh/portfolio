@@ -84,7 +84,10 @@ export function Sidebar() {
 
       {/* Pinned to the bottom of the sidebar */}
       {lastUpdated && (
-        <p className="mt-auto px-6 pb-8 text-sm text-text-muted lg:px-8">Last update: {lastUpdated}</p>
+        <p className="mt-auto px-6 pb-8 text-sm text-text-muted lg:px-8">
+          Last updated:
+          <span className="block font-mono">{lastUpdated}</span>
+        </p>
       )}
     </aside>
   );

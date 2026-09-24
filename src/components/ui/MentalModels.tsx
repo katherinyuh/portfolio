@@ -10,6 +10,7 @@ import {
   useTransform,
   type MotionValue,
 } from "framer-motion";
+import { useLightbox } from "@/components/ui/MediaLightbox";
 
 export interface MentalModelReference {
   src: string;
@@ -45,6 +46,7 @@ function Floater({
   const el = useRef<HTMLDivElement>(null);
   const dx = useMotionValue(0);
   const dy = useMotionValue(0);
+  const openLightbox = useLightbox();
 
   // How far this picture is from the middle of the video, which is where it ends up.
   // (offsetLeft / offsetTop ignore transforms, so this is right even while it is moving.)
@@ -95,8 +97,9 @@ function Floater({
         width={item.width}
         height={item.height}
         sizes={`${item.displayWidth}px`}
+        onClick={() => openLightbox({ type: "image", src: item.src, alt: item.alt })}
         style={{ width: item.displayWidth }}
-        className="block h-auto max-w-full"
+        className="block h-auto max-w-full cursor-zoom-in"
       />
     </motion.div>
   );
@@ -119,6 +122,7 @@ export default function MentalModels({
   const reduce = useReducedMotion();
   const frame = useRef<HTMLDivElement>(null);
   const videoEl = useRef<HTMLVideoElement>(null);
+  const openLightbox = useLightbox();
   // 0 while the section is on its way up the screen (the tools stay out), rising to 1 as its middle climbs
   // from 60% down the screen to 25% down it (the tools are behind the video)
   const { scrollYProgress } = useScroll({ target: frame, offset: ["center 60%", "center 25%"] });
@@ -155,7 +159,8 @@ export default function MentalModels({
               loop
               muted
               playsInline
-              className="relative z-10 block w-full max-md:order-first md:w-[440px] md:min-w-0 md:shrink"
+              onClick={() => openLightbox({ type: "video", src: video, alt: "The Clubly events page" })}
+              className="relative z-10 block w-full cursor-zoom-in max-md:order-first md:w-[440px] md:min-w-0 md:shrink"
               style={{ aspectRatio: videoRatio }}
             />
           )}

@@ -34,8 +34,11 @@ export type CaseStudyBlock =
   /** `content` paragraphs may use **double asterisks** for bold. A line that is bold from start to end with no full stop (e.g. "**Collaboration**") becomes a small sub-heading for the paragraph after it. */
   | { type: "text"; label?: string; heading?: string; content?: string | string[] }
   | { type: "image"; caption: string }
-  | { type: "mediaRow"; items: MediaRowItem[] }
-  | { type: "video"; src: string; alt: string; ratio: number }
+  /** `width: "prose"` narrows it to the same width as the text column, instead of the page's full width.
+      `tightY`: 24px of padding above and below the media at every width, instead of growing on sm screens and up.
+      `stacked`: the items sit one above the other instead of side by side. */
+  | { type: "mediaRow"; items: MediaRowItem[]; width?: "prose"; tightY?: boolean; stacked?: boolean }
+  | { type: "video"; src: string; alt: string; ratio: number; width?: "prose"; tightY?: boolean }
   | { type: "imageFrame"; src: string; alt: string; width: number; height: number }
   | { type: "cards"; items: CardRowItem[] }
   /** A closing line at the end of a case study, in the same type as the case study title. */
@@ -128,7 +131,7 @@ export const projects: Project[] = [
     gallery: [
       { src: "/images/clubly-card-v2.webp", ratio: 2000 / 1160 },
       { src: "/images/clubly-student-view.svg", ratio: 1440 / 836 },
-      { src: "/images/team/spring-2026.jpg", ratio: 2000 / 1333 },
+      { src: "/images/team/spring-2026.png", ratio: 2000 / 1333 },
     ],
     hero: "/images/clubly.webp",
     heroVideo: { src: "/videos/clubly-hero.mp4", box: { x: (164 / 1708) * 100, y: (20 / 840) * 100, w: (1378 / 1708) * 100, h: (798 / 840) * 100 } },
@@ -286,7 +289,7 @@ export const projects: Project[] = [
         items: [
           { src: "/images/team/pizookie.jpg", alt: "Three pizookies on a wooden table", caption: "Quarterly BJ's pizookie meal", ratio: 688 / 724 },
           { src: "/images/team/kbbq.jpg", alt: "Grilling meat at a Korean BBQ table surrounded by side dishes", caption: "Fall quarter 2025 team social — KBBQ", ratio: 688 / 724 },
-          { src: "/images/team/spring-2026.jpg", alt: "The Clubly team standing together on a tree-lined campus road", caption: "Spring quarter 2026 Clubly photoshoot", ratio: 1408 / 755, wide: true, position: "50% 30%" },
+          { src: "/images/team/spring-2026.png", alt: "The Clubly team standing together on a tree-lined campus road", caption: "Spring quarter 2026 Clubly photoshoot", ratio: 1408 / 755, wide: true, position: "50% 30%" },
         ],
       },
       { type: "closing", text: "Thank you for checking this out!" },
@@ -451,8 +454,104 @@ export const projects: Project[] = [
     thumbnailRatio: 2000 / 1160,
     heroRatio: 2000 / 983,
     featured: true,
-    comingSoon: true,
     slug: "ibm",
+    caseStudy: [
+      {
+        type: "text",
+        heading: "Case study in progress!",
+        content:
+          "I'm still working on putting this case study together, but I wanted to share my work in the meantime. There are a few things I'm still refining and documenting, but I hope this gives you a glimpse into the project and my design process.",
+      },
+      {
+        type: "text",
+        label: "IBM Z Open Editor",
+        content: [
+          "IBM Z Open Editor is a VS Code extension for mainframe development with 200,000+ installs. IBM is moving developers off its older Eclipse-based IDE and onto VS Code, and this feature was one of the gaps between the two. The backend logic was already built, so engineering was waiting on design to ship it. When engineering set a ship date, I had about three weeks left, and I worked with the developer on US East Coast and my design lead in Bangalore to get there.",
+          "As a design intern on IBM's Z DevOps team, I designed how IBM Z Open Editor tells COBOL developers when a variable they declared is no longer used. I took the feature from competitive analysis and journey mapping through four concepts to a final recommendation, then refined it with engineering until it shipped.",
+        ],
+      },
+      {
+        type: "text",
+        label: "Problem",
+        heading: "Developers aren't told when a variable they declared goes unused",
+        content: [
+          "When developers refactor COBOL, variables from the old logic get left behind, and Z Open Editor never flags them. Newer developers don't know to look, so they find out in code review. Experienced developers switch to the older Eclipse IDE to run a manual check that goes stale as soon as they keep editing.",
+          "**How might I surface unused variables so early tenure developers notice them and experienced developers can manage them without leaving VS Code?**",
+        ],
+      },
+      {
+        type: "text",
+        label: "Solution",
+        heading: "Unused variables flagged automatically, from first signal to fix, inside VS Code",
+        content:
+          "Unused variables are now dimmed as soon as they stop being referenced, with a hover explanation, a Quick Fix, and a Problems panel list that stays current as developers edit. The feature shipped on August 21, 2026, on the date engineering set. Since Z Open Editor runs on-premises, usage data isn't available yet; my mentor will share impact numbers as they come in.",
+      },
+      {
+        type: "video",
+        src: "/videos/ibm-single-unused-variable.mp4",
+        alt: "Single unused variable",
+        ratio: 2786 / 1718,
+        width: "prose",
+        tightY: true,
+      },
+      {
+        type: "text",
+        label: "Key decisions",
+        heading: "Designing for two developers who feel the same problem differently",
+        content:
+          "I worked from two personas IBM's researchers had defined: Deb, an early-tenure developer, and Kathleen, an experienced z/OS developer. Mapping their journeys showed they needed different things. Deb needed to be told unused variables exist, and Kathleen needed a check she could trust while she kept editing. Each decision below serves one or both of them.",
+      },
+      {
+        type: "text",
+        heading: "A quiet signal the moment a variable goes unused",
+        content: [
+          "I compared how seven languages handle unused variables in VS Code. Almost all treat them as code quality hints, not errors, and the most common cue is dimming, because developers don't want to be interrupted while scanning code. I also explored a louder squiggly underline and a banner above the editor, but both added noise, especially in large COBOL files.",
+          "So unused variables are dimmed right where the developer is working, as soon as they become unused. For Deb, that closes the gap my research kept pointing to: developers can't investigate issues they're never told about.",
+        ],
+      },
+      {
+        type: "imageFrame",
+        src: "/images/ibm/dimmed-unused-variable.svg",
+        alt: "Dimmed unused variable",
+        width: 813,
+        height: 486,
+      },
+      {
+        type: "text",
+        heading: "A list that stays current, so developers don't have to remember",
+        content: [
+          "Kathleen's real problem wasn't switching to Eclipse. It was that the Eclipse check is a snapshot, so it's outdated the moment she makes another change, and she loses confidence mid-refactor.",
+          "The Problems panel keeps a running list of unused variables that updates automatically as she edits, and a status bar badge shows the count for the file. She can jump from the list to each variable without leaving VS Code or keeping track of when she last checked.",
+        ],
+      },
+      {
+        type: "video",
+        src: "/videos/ibm-problems-panel.mp4",
+        alt: "Problems panel",
+        ratio: 1630 / 488,
+        width: "prose",
+        tightY: true,
+      },
+      {
+        type: "text",
+        heading: "One path from noticing to fixing",
+        content: [
+          "The competitive analysis showed developers expect every flag to come with a way to act on it. Hovering over a dimmed variable explains that it's declared but never referenced, and a Quick Fix removes it in one click, from the editor or the Problems panel.",
+          "I kept the wording short after the engineer building it pointed out that COBOL developers would see extra explanation as clutter. The dimmed text already shows where the variable is, so the hover only needs to say why.",
+        ],
+      },
+      {
+        type: "mediaRow",
+        width: "prose",
+        tightY: true,
+        stacked: true,
+        items: [
+          { kind: "video", src: "/videos/ibm-inline-hover.mp4", alt: "In line hover", ratio: 1632 / 688 },
+          { kind: "video", src: "/videos/ibm-quick-fix.mp4", alt: "Quick fix", ratio: 1632 / 688 },
+        ],
+      },
+      { type: "closing", text: "Thank you for checking this out!" },
+    ],
   },
   {
     id: "4",
