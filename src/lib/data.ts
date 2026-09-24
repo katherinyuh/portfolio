@@ -163,7 +163,7 @@ export const projects: Project[] = [
         label: "Solution & Outcomes",
         heading: "Club event creation and exploration on one platform",
         content:
-            "Clubly makes events more discoverable and personalized by aligning with students’ interests, schedules, and social circles. Students find events that matter to them and bring friends along, while clubs see higher turnout and stronger fundraising. We launched the first version of our website in spring 2026, and since then, **200+ events** have been posted and we have **over 15k users**.",
+            "Clubly makes events more discoverable and personalized by aligning with students’ interests, schedules, and social circles. Students find events that matter to them and bring friends along, while clubs see higher turnout and stronger fundraising. We launched the first version of our website in spring 2026, and since then, **200+ events** have been posted and we have **15k+ users**.",
           },
       {
         type: "video",
